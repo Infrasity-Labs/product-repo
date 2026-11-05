@@ -1,0 +1,20 @@
+.prb { height: 2800px; margin-top: 120px; }
+.prb__stage { position: sticky; top: 0; height: 100vh; min-height: 560px; overflow: hidden; }
+.prb__guides { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); pointer-events: none; }
+.prb__shell { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 var(--gutter); pointer-events: none; }
+.prb__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.prb__veil { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 50% 40% at 50% 50%, var(--bg) 0%, color-mix(in srgb, var(--bg) 85%, transparent) 50%, transparent 100%); }
+.prb__copy { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.prb__title { max-width: 900px; font-size: 56px; line-height: 1.04; font-weight: 700; letter-spacing: -0.045em; color: var(--fg); text-wrap: balance; }
+.prb__word { display: inline-block; will-change: filter, opacity; }
+.prb__sub { max-width: 560px; margin-top: 28px; font-size: 18px; line-height: 26px; color: var(--fg-3); text-wrap: balance; }
+
+@media (max-width: 800px) {
+  .prb { height: 2100px; }
+  .prb__title { font-size: 34px; }
+  .prb__sub { font-size: 16px; line-height: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prb { height: auto; }
+  .prb__stage { position: relative; height: 680px; }
+}

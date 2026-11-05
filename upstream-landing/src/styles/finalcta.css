@@ -1,0 +1,9 @@
+.fcta { margin-top: 96px; }
+.fcta__inner { position: relative; text-align: center; padding: 88px var(--gutter); overflow: hidden; }
+/* Must out-rank `.fcta__inner > *` below, otherwise the glow becomes an in-flow 420px block and pushes the headline down. */
+.fcta__inner > .fcta__glow { position: absolute; left: 50%; top: 50%; width: 720px; height: 360px; transform: translate(-50%, -50%); background: radial-gradient(closest-side, color-mix(in srgb, var(--brand-2) 16%, transparent), transparent); pointer-events: none; }
+.fcta__inner > *:not(.fcta__glow) { position: relative; }
+.fcta .h2 { max-width: 760px; margin-inline: auto; }
+.fcta .lead { max-width: 520px; margin-inline: auto; }
+.fcta .btn-row { justify-content: center; margin-top: 28px; }
+@media (max-width: 800px) { .fcta { margin-top: 64px; } .fcta__inner { padding: 56px 16px; } .fcta .h2 { font-size: 34px; line-height: 40px; } }

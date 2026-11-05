@@ -1,0 +1,7 @@
+/* Scroll-driven carousel: .car-run is the tall runway, .car-stick pins inside it, .car-clip masks the sliding .car strip. */
+.car-run { position: relative; }
+.car-stick { position: sticky; top: 128px; }
+.car-clip { overflow: hidden; margin-right: calc(50% - 50vw); }
+.car { display: flex; width: max-content; padding-left: var(--gutter); will-change: transform; }
+.car::after { content: ''; flex: 0 0 var(--gutter); }
+.car__item { flex: 0 0 auto; }

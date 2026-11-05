@@ -1,0 +1,47 @@
+.cx__cell { display: flex; flex-direction: column; }
+.cx__vis { position: relative; height: 340px; overflow: hidden; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, var(--bg-subtle), var(--bg)); }
+.cx__text { padding: var(--gutter); }
+.cx__title { font-size: 18px; line-height: 26px; font-weight: 500; letter-spacing: -0.01em; color: var(--fg); }
+.cx__sub { font-size: 18px; line-height: 26px; letter-spacing: -0.0025em; color: var(--fg-3); margin-top: 4px; max-width: 460px; }
+.cx__text .btn { margin-top: 20px; }
+
+/* prompt tree */
+.cx__tree { position: absolute; left: 24px; top: 0; width: 520px; height: 100%; -webkit-mask-image: linear-gradient(90deg, #000 62%, transparent 100%); mask-image: linear-gradient(90deg, #000 62%, transparent 100%); }
+.cx__tree svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cx__tree path { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+.cx__chip { position: absolute; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(15,15,18,.04); font-size: 13px; color: var(--fg-2); white-space: nowrap; transform: translateY(-50%); transition: border-color .15s, box-shadow .15s, color .15s; cursor: default; }
+.cx__chip:hover { border-color: var(--fg-4); color: var(--fg); box-shadow: var(--shadow-card); }
+.cx__chip b { font-weight: 500; color: var(--fg); }
+.cx__chip--root { background: var(--fg); border-color: var(--fg); color: #cfcfd6; }
+.cx__chip--root b { color: #fff; }
+.cx__chip--root:hover { color: #fff; border-color: var(--fg); }
+.cx__up { color: var(--good); }
+.cx__down { color: var(--bad); }
+
+/* visibility card */
+.cx__card { position: absolute; left: 24px; right: 24px; top: 24px; bottom: -1px; background: var(--surface); border: 1px solid var(--border); border-bottom: 0; border-radius: 12px 12px 0 0; box-shadow: var(--shadow-card); padding: 16px 18px 0; display: flex; flex-direction: column; }
+.cx__card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cx__card-title { font-size: 14px; font-weight: 500; color: var(--fg); }
+.cx__mini { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--surface-2); }
+.cx__mini button { height: 24px; padding: 0 10px; border-radius: 6px; font-size: 12px; color: var(--fg-3); white-space: nowrap; transition: background .15s, color .15s; }
+.cx__mini button[aria-selected='true'] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(15,15,18,.08); }
+.cx__chart-title { margin-top: 14px; font-size: 12px; color: var(--fg-3); }
+.cx__chart { position: relative; flex: 1; display: grid; grid-template-columns: 34px 1fr; margin-top: 6px; padding-bottom: 4px; min-height: 0; }
+.cx__axis { display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: var(--fg-3); font-family: var(--mono); padding-bottom: 26px; }
+.cx__plot { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); align-items: end; }
+.cx__grid { position: absolute; left: 0; right: 0; top: 6px; bottom: 26px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.cx__grid i { border-top: 1px dashed var(--border); }
+.cx__col { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; padding-bottom: 4px; cursor: default; }
+.cx__barwrap { flex: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+.cx__bar { width: 16px; border-radius: 4px 4px 0 0; transform-origin: bottom; transition: filter .15s, opacity .15s; }
+.cx__plot[data-hover] .cx__col:not([data-on='true']) .cx__bar { opacity: .35; }
+.cx__tip { position: absolute; bottom: calc(100% - 4px); left: 50%; transform: translateX(-50%); background: var(--fg); color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 3; }
+.cx__tip small { color: #b4b4bb; margin-left: 4px; }
+
+@media (max-width: 800px) {
+  .cx__grid2.cg--2 { grid-template-columns: 1fr; }
+  .cx__grid2.cg--2 > :nth-child(n) { border-right: 0; }
+  .cx__sub, .cx__title { font-size: 16px; line-height: 24px; }
+  .cx__vis { height: 380px; }
+  .cx__card-top { flex-wrap: wrap; }
+}
