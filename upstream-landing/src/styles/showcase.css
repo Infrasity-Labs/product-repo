@@ -19,9 +19,10 @@
 /* ---------- context ---------- */
 .sc-cx { margin-top: 64px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
 .sc-card { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
-.sc-card__text { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.sc-card__text { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .sc-card__title { font-size: 22px; line-height: 1.15; font-weight: 400; letter-spacing: -0.025em; }
 .sc-card__sub { color: var(--soft); font-size: 15px; max-width: 44ch; margin-bottom: 8px; }
+.sc-card__text .pill { margin-top: auto; }
 
 @media (max-width: 900px) {
   .sc-mk { grid-template-columns: 1fr; gap: 28px; margin-top: 48px; }

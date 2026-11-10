@@ -1,4 +1,4 @@
-/* Small, dependency-free page behaviours: nav, cursor dot, rotating engine, scroll reveals and count-ups. */
+/* Small, dependency-free page behaviours: nav, cursor dot, scroll reveals and count-ups. */
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -44,30 +44,6 @@ export function initCursor() {
     { passive: true },
   )
   document.documentElement.addEventListener('mouseleave', () => { dot.dataset.on = 'false'; seen = false })
-}
-
-const ENGINES: [string, string][] = [
-  ['ChatGPT', 'chatgpt'], ['Claude', 'claude'], ['Gemini', 'gemini'], ['Perplexity', 'perplexity'],
-  ['Google AI Overviews', 'google'], ['Google AI Mode', 'google'], ['Microsoft Copilot', 'copilot'], ['Grok', 'grok'],
-]
-
-/** Cycles the engine under the headline. */
-export function initRotator() {
-  const host = document.getElementById('rot')
-  const inner = host?.querySelector<HTMLElement>('.hero__rot-in')
-  const img = inner?.querySelector('img')
-  const name = inner?.querySelector<HTMLElement>('.ink')
-  if (!inner || !img || !name || reduce) return
-  let i = 0
-  window.setInterval(() => {
-    if (document.hidden) return
-    i = (i + 1) % ENGINES.length
-    img.src = `/logos/${ENGINES[i][1]}.svg`
-    name.textContent = ENGINES[i][0]
-    inner.classList.remove('swap')
-    void inner.offsetWidth // restart the animation
-    inner.classList.add('swap')
-  }, 2200)
 }
 
 function countUp(el: HTMLElement) {

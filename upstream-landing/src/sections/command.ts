@@ -6,7 +6,6 @@ export const id = 'command'
 
 export function render(host: HTMLElement): void {
   host.innerHTML = `<div class="wrap">
-    <p class="label" data-r>07 — Command center</p>
     <h2 class="h2" data-r style="max-width:18ch"><span class="ink">Built for teams that act on the data every week.</span></h2>
     <p class="lead" data-r>Track runs, share what changed and keep everyone on the same citation numbers.</p>
 

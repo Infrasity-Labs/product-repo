@@ -16,8 +16,8 @@ const isNo = (s: string) => /^(No|Rarely)$/.test(s)
 
 const X = '<svg class="cp-ic cp-ic--no" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
 const DASH = '<svg class="cp-ic cp-ic--mid" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 8h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
-const CHECK = '<svg class="cp-ic cp-ic--ok" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".14"/><path d="M4.8 8.3l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-const MARK = '<svg class="cp-mark" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M16 7v13M10 13l6-6 6 6M10 24c0-3 2.5-4 6-4s6 1 6 4" fill="none" stroke="#f1eeff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const CHECK = '<svg class="cp-ic cp-ic--ok" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#fff"/><path d="M5.8 10.4l2.8 2.8 5.6-6" fill="none" stroke="#4b2cf0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+const MARK = '<svg class="cp-mark" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#fff"/><path d="M16 7v13M10 13l6-6 6 6M10 24c0-3 2.5-4 6-4s6 1 6 4" fill="none" stroke="#4b2cf0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
 const strip: [string, string][] = [
   ['Built for', 'DevTool, AI agent and B2B SaaS startups'],
@@ -27,7 +27,6 @@ const strip: [string, string][] = [
 
 export function render(host: HTMLElement): void {
   host.innerHTML = `<div class="wrap">
-<p class="label" data-r>10 — Why Upstream</p>
 <h2 class="h2" data-r><span class="ink">Why not a general AI-visibility tool?</span></h2>
 <p class="cp-lead" data-r>General tools are built for consumer brands. Upstream is built for how engineers choose software.</p>
 <div class="cp-table" role="table" aria-label="Upstream compared with general AI-visibility tools" data-r>

@@ -8,7 +8,7 @@
  *    With `fit` the card keeps its real desktop layout and is scaled (CSS `zoom`) down to the slot by `fitFrames()`.
  */
 export function appFrame(inner: string, o: { height?: number; fit?: number; pad?: boolean; cls?: string } = {}): string {
-  const crop = o.height ? `max-height:${o.height}px` : ''
+  const crop = o.height ? `height:${o.height}px` : ''
   const body = o.fit ? `<div data-fit-in style="width:${o.fit}px">${inner}</div>` : inner
   return `<div class="app relative overflow-hidden rounded-2xl border border-separator-border bg-background-secondary-default ${o.pad === false ? '' : 'p-3 sm:p-4'} ${o.cls ?? ''}" style="${crop}"${o.fit ? ` data-fit="${o.fit}"` : ''}>
     ${body}

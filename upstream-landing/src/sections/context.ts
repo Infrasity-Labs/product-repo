@@ -8,7 +8,6 @@ export const id = 'context'
 export function render(host: HTMLElement): void {
   host.innerHTML = `
   <div class="wrap">
-    <p class="label" data-r>04 — Context</p>
     <h2 class="h2" data-r><span class="ink">Underpinned by the context devtool marketers need.</span></h2>
     <p class="sc-lead" data-r>Every AI Search signal and a living synthesis of your brand's data.</p>
     <div class="sc-cx">

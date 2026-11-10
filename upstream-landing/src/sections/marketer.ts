@@ -66,7 +66,6 @@ const TABS: Tab[] = [
 export function render(host: HTMLElement): void {
   host.innerHTML = `
   <div class="wrap">
-    <p class="label" data-r>03 — What Upstream does</p>
     <h2 class="h2" data-r><span class="ink">Upstream makes it possible.</span></h2>
     <p class="sc-lead" data-r>It finds the work worth doing, drafts it, and pings you for approval.</p>
     <div class="sc-mk" data-r>

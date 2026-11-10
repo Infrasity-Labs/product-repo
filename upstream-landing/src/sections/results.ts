@@ -81,7 +81,6 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
 export function render(host: HTMLElement): void {
   host.classList.add('pf-sec')
   host.innerHTML = `<div class="wrap">
-    <p class="label" data-r>05 — Results</p>
     <h2 class="h2" data-r><span class="ink">Engineered for developer marketers with higher standards.</span></h2>
     <p class="pf-lead" data-r>See what a tracked, closed-loop AEO workflow looks like, from first scan to a measurable lift.</p>
     <div class="pf-res">

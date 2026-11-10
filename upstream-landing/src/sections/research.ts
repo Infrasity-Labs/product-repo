@@ -36,7 +36,6 @@ export function render(host: HTMLElement): void {
   host.innerHTML = `<div class="wrap">
     <div class="op-head" data-r>
       <div>
-        <p class="label">09 — Research</p>
         <h2 class="h2" style="max-width:16ch"><span class="ink">Built around how developers actually search.</span></h2>
         <p class="lead">How AI engines answer developer questions, and what it means for your category.</p>
       </div>

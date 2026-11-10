@@ -5,7 +5,7 @@ import './style.css'
 import './styles/app.css'
 import Lenis from 'lenis'
 import { fitFrames } from './app/frame'
-import { initCursor, initNav, initReveal, initRotator } from './ui'
+import { initCursor, initNav, initReveal } from './ui'
 
 /*
  * Section modules: every file in ./sections exports `id` (the host element's id in index.html) and `render(host)`.
@@ -22,7 +22,6 @@ fitFrames()
 initReveal()
 initNav()
 initCursor()
-initRotator()
 
 // Inertial wheel scrolling (touch stays native; off for reduced motion).
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
