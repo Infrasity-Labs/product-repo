@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
-import { CarouselControls, CarouselItem, CarouselProvider, CarouselTrack } from './Carousel'
-import { Reveal } from './Reveal'
 import '../styles/results.css'
 
 type Report =
@@ -31,7 +28,7 @@ function Art({ kind }: { kind: Card['art'] }) {
     case 'rings':
       return (
         <svg className="res-art" viewBox="0 0 640 480" preserveAspectRatio="xMaxYMin slice" aria-hidden>
-          {[80, 140, 200, 260, 320].map((r) => <circle key={r} cx="470" cy="150" r={r} fill="none" stroke="currentColor" strokeOpacity={0.14} />)}
+          {[80, 140, 200, 260, 320].map((r) => <circle key={r} cx="470" cy="150" r={r} fill="none" stroke="currentColor" strokeOpacity={0.3} />)}
           <circle cx="470" cy="150" r="9" fill="currentColor" />
         </svg>
       )
@@ -95,7 +92,7 @@ function Trend({ points, unit, labels }: { points: number[]; unit: string; label
         </defs>
         {[0.25, 0.5, 0.75].map((f) => <line key={f} x1="0" x2={w} y1={h * f} y2={h * f} stroke="var(--border)" strokeDasharray="3 4" />)}
         <path d={`${d} L${w - p} ${h} L${p} ${h} Z`} fill="url(#res-area)" />
-        <motion.path d={d} fill="none" stroke="var(--brand)" strokeWidth="2" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.9, ease: 'easeOut' }} />
+        <path d={d} fill="none" stroke="var(--brand)" strokeWidth="2" strokeLinejoin="round" />
         <circle cx={last[0]} cy={last[1]} r="4" fill="var(--brand)" />
       </svg>
       <div className="res-trend__axis"><span>{labels[0]}</span><b>{points[points.length - 1]}{unit}</b><span>{labels[1]}</span></div>
@@ -107,11 +104,11 @@ function Bars({ rows, unit }: { rows: [string, number][]; unit: string }) {
   const max = Math.max(...rows.map((r) => r[1]))
   return (
     <ul className="res-bars">
-      {rows.map(([label, v], i) => (
+      {rows.map(([label, v]) => (
         <li key={label}>
           <span>{label}</span>
           <div className="res-bars__track">
-            <motion.i initial={{ width: 0 }} animate={{ width: `${(v / max) * 100}%` }} transition={{ duration: 0.7, delay: i * 0.05, ease: [0.2, 0.8, 0.2, 1] }} />
+            <i style={{ width: `${(v / max) * 100}%` }} />
           </div>
           <b className="mono">{v}{unit}</b>
         </li>
@@ -131,8 +128,8 @@ function ReportModal({ card, onClose }: { card: Card; onClose: () => void }) {
   }, [onClose])
   const r = card.report
   return (
-    <motion.div className="res-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <motion.div className="res-modal__box" role="dialog" aria-modal="true" aria-label={r.title} initial={{ y: 16, scale: 0.98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 8, opacity: 0 }} transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}>
+    <div className="res-modal" data-lenis-prevent onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}>
+      <div className="res-modal__box" role="dialog" aria-modal="true" aria-label={r.title}>
         <div className="res-modal__head">
           <div>
             <div className="eyebrow">Sample report · Tracewell</div>
@@ -144,8 +141,8 @@ function ReportModal({ card, onClose }: { card: Card; onClose: () => void }) {
         <p className="body">{card.desc}</p>
         <div className="res-modal__viz">{r.kind === 'trend' ? <Trend points={r.points} unit={r.unit} labels={r.labels} /> : <Bars rows={r.rows} unit={r.unit} />}</div>
         <p className="res-modal__foot">Sample data from Tracewell. Illustrative, not a customer result.</p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
@@ -154,34 +151,28 @@ export function Results() {
   return (
     <section className="sec sec--top res" id="results">
       <div className="shell">
-        <CarouselProvider>
-          <div className="sec-head">
-            <Reveal className="sec-head__text">
-              <h2 className="h2">Engineered for developer marketers with higher standards</h2>
-              <p className="lead">See what a tracked, closed-loop AEO workflow looks like, from first scan to a measurable lift.</p>
-            </Reveal>
-            <CarouselControls />
+        <div className="sec-head">
+          <div className="sec-head__text">
+            <div className="eyebrow">Results</div>
+            <h2 className="h2">Engineered for developer marketers with higher standards</h2>
+            <p className="lead">See what a tracked, closed-loop AEO workflow looks like, from first scan to a measurable lift.</p>
           </div>
-          <CarouselTrack label="Example outcomes" className="res-track">
-            {cards.map((c) => (
-              <CarouselItem key={c.stat} className="res-item">
-                <article className={`res-card res-card--${c.theme}`}>
-                  <Art kind={c.art} />
-                  <div className="res-card__body">
-                    <div className="res-card__stat">{c.stat}</div>
-                    <p className="res-card__desc">{c.desc}</p>
-                    <div className="res-card__foot">
-                      <span className="res-card__label">Sample data from Tracewell</span>
-                      <button type="button" className="btn btn--secondary" onClick={() => setOpen(c)}>View report</button>
-                    </div>
-                  </div>
-                </article>
-              </CarouselItem>
-            ))}
-          </CarouselTrack>
-        </CarouselProvider>
+        </div>
+        <div className="res-grid">
+          {cards.map((c) => (
+            <article key={c.stat} className={`res-card res-card--${c.theme}`}>
+              <Art kind={c.art} />
+              <div className="res-card__stat">{c.stat}</div>
+              <p className="res-card__desc">{c.desc}</p>
+              <div className="res-card__foot">
+                <span className="res-card__label">Sample data from Tracewell</span>
+                <button type="button" className="btn btn--secondary" onClick={() => setOpen(c)}>View report</button>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-      <AnimatePresence>{open && <ReportModal card={open} onClose={() => setOpen(null)} />}</AnimatePresence>
+      {open && <ReportModal card={open} onClose={() => setOpen(null)} />}
     </section>
   )
 }

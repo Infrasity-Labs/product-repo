@@ -1,7 +1,7 @@
-.rf { overflow-x: clip; }
-.rf .car { border-top: 1px solid var(--border); padding-left: 0; scroll-padding-left: 0; }
-.rf-cell { width: 352px; max-width: 86vw; display: flex; flex-direction: column; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
-.rf-cell__viz { height: 340px; padding: 20px; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--bg-subtle), var(--surface)); border-bottom: 1px solid var(--border); position: relative; }
+.rf-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; padding: 0 var(--gutter); }
+.rf-cell { grid-column: span 2; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 1px 2px rgba(15,15,18,.04); overflow: hidden; }
+.rf-cell:nth-child(n+4) { grid-column: span 3; }
+.rf-cell__viz { min-height: 300px; padding: 20px; display: flex; align-items: center; justify-content: center; background: var(--bg-subtle); border-bottom: 1px solid var(--border); position: relative; }
 .rf-cell__viz > * { width: 100%; }
 .rf-cell__text { padding: 24px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; flex: 1; }
 .rf-cell__text .btn { margin-top: auto; }
@@ -39,7 +39,6 @@
 .rf-alert__claim { font-size: 18px; letter-spacing: -0.02em; font-weight: 500; }
 .rf-alert__meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fg-3); }
 .rf-alert__why { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-subtle); width: 100%; text-align: left; }
-.rf-alert__chev { margin-left: auto; transition: transform .2s; }
 .rf-alert__chev[data-open='true'] { transform: rotate(180deg); }
 .rf-alert__why-body { font-size: 13px; line-height: 19px; color: var(--fg-2); padding: 2px 2px 0; }
 
@@ -48,17 +47,28 @@
 .rf-sent__top b { font-size: 28px; font-weight: 500; color: var(--fg); letter-spacing: -0.03em; }
 .rf-sent__top small { font-size: 12px; color: var(--fg-3); font-weight: 400; letter-spacing: 0; }
 .rf-sent__bar { display: flex; height: 18px; gap: 2px; }
-.rf-sent__bar button { height: 100%; border-radius: 4px; transition: opacity .2s; }
+.rf-sent__bar button { height: 100%; border-radius: 4px; }
 .rf-sent__legend { display: flex; gap: 12px; font-size: 11px; color: var(--fg-2); }
 .rf-sent__legend span { display: inline-flex; align-items: center; gap: 5px; }
 .rf-sent__list { display: grid; gap: 6px; border-top: 1px solid var(--border); padding-top: 12px; }
 .rf-sent__row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
 
 .rf-threads { display: grid; gap: 8px; }
-.rf-threads li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); transition: border-color .15s, transform .2s var(--ease); }
-.rf-threads li:hover { border-color: var(--border-strong); transform: translateX(2px); }
+.rf-threads li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); transition: border-color .15s; }
+.rf-threads li:hover { border-color: var(--border-strong); }
 .rf-threads li > svg { color: #e8590c; flex: none; }
 .rf-threads li div { flex: 1; min-width: 0; display: grid; }
 .rf-threads li b { font-weight: 500; font-size: 12.5px; line-height: 17px; }
 .rf-threads li div span { font-size: 11px; color: var(--fg-3); }
 .rf-threads .tag { flex: none; font-size: 11px; }
+
+@media (max-width: 900px) {
+  .rf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rf-cell, .rf-cell:nth-child(n+4) { grid-column: span 1; }
+  .rf-cell:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .rf-grid { grid-template-columns: 1fr; }
+  .rf-cell:last-child { grid-column: auto; }
+  .rf-cell__viz { min-height: 0; }
+}

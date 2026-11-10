@@ -1,10 +1,8 @@
 .nv { position: fixed; inset: 0 0 auto 0; z-index: 60; }
 .nv__bar, .nv__announce {
-  background: rgba(255, 255, 255, 0.99);
+  background: #fff;
   border-bottom: 1px solid var(--border);
-  transition: background 0.2s;
 }
-.nv--scrolled .nv__bar, .nv--scrolled .nv__announce { background: #fff; }
 .nv__bar { position: relative; z-index: 2; height: 56px; }
 .nv__inner {
   position: relative; width: min(var(--shell), 100%); height: 100%; margin-inline: auto; padding-inline: 16px;
@@ -19,7 +17,7 @@
   transition: color 0.15s, background 0.15s;
 }
 .nv__link:hover, .nv__link[aria-expanded='true'] { color: var(--fg); background: var(--surface-2); }
-.nv__chev { transition: transform 0.2s var(--ease); }
+.nv__chev { flex-shrink: 0; }
 .nv__link[aria-expanded='true'] .nv__chev { transform: rotate(180deg); }
 
 .nv__cta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
@@ -29,10 +27,11 @@
 
 /* mega panel */
 .nv__panel {
-  position: absolute; top: calc(100% + 4px); left: 0; right: 0; margin-inline: auto; width: 720px; max-width: calc(100vw - 32px);
+  position: absolute; top: 100%; left: 0; right: 0; margin-inline: auto; width: 720px; max-width: calc(100vw - 32px);
   background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-xl);
-  box-shadow: var(--shadow-pop); padding: 8px; transform-origin: top center; z-index: 5;
+  box-shadow: 0 1px 2px rgba(15, 15, 18, 0.04); padding: 8px; z-index: 5;
 }
+.nv__panel::before { content: ''; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
 .nv__panel--wide { width: 800px; }
 .nv__panel--solutions { width: 360px; }
 .nv__cols { display: grid; gap: 8px; }
@@ -44,7 +43,7 @@
 .nv__item:hover { background: var(--surface-2); }
 .nv__icon {
   width: 28px; height: 28px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px;
-  background: var(--surface-2); border: 1px solid var(--border); color: var(--fg-2); transition: background 0.15s, color 0.15s;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--fg-2); transition: background-color 0.15s, color 0.15s;
 }
 .nv__icon svg { width: 14px; height: 14px; }
 .nv__item:hover .nv__icon { background: var(--fg); color: #fff; border-color: var(--fg); }
@@ -59,16 +58,14 @@
 .nv-feat:hover { border-color: var(--border-strong); background: var(--surface-2); }
 .nv-feat__title { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; letter-spacing: -0.0125em; }
 .nv-feat__desc { display: block; font-size: 12px; line-height: 16px; color: var(--fg-3); margin-top: 4px; }
-.nv-feat__thumb { width: 150px; padding: 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); display: grid; gap: 5px; box-shadow: var(--shadow-card); }
-.nv-feat__thumb i { display: block; height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--brand), var(--brand-2)); opacity: 0.85; }
+.nv-feat__thumb { width: 150px; padding: 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); display: grid; gap: 5px; }
+.nv-feat__thumb i { display: block; height: 5px; border-radius: 3px; background: var(--brand); }
 .nv-feat__logos { display: flex; gap: 8px; }
 .nv-feat__logos img { padding: 6px; width: 34px; height: 34px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
 
 /* announcement bar */
 .nv__announce { position: relative; z-index: 1; height: 47px; }
 .nv__announce-in { height: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; color: var(--fg-2); letter-spacing: -0.0125em; }
-.nv__announce-in svg { transition: transform 0.2s var(--ease); }
-.nv__announce-in:hover svg { transform: translateX(3px); }
 .nv__announce-in:hover { color: var(--fg); }
 .nv__badge { padding: 2px 8px; border-radius: 6px; background: var(--brand-soft); color: var(--brand); border: 1px solid #d9d1ff; font-size: 13px; line-height: 20px; }
 

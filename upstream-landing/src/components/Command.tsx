@@ -1,27 +1,22 @@
-import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion, useInView } from 'motion/react'
-import { BookOpen, Bell, ChevronLeft, ChevronRight, FileSpreadsheet, GitBranch, ListOrdered, Mail, MessageSquare, Newspaper } from 'lucide-react'
-import { runwayY, scrollToY, useRunway } from '../lib/scroll'
-import { Reveal } from './Reveal'
+import { useId, useState } from 'react'
+import { BookOpen, Bell, FileSpreadsheet, GitBranch, ListOrdered, Mail, MessageSquare, Newspaper } from 'lucide-react'
 import { EngineLogo } from './EngineLogo'
 import { LogoMark } from './Logo'
 import '../styles/command.css'
 
 function Area({ data, color = 'var(--brand)', h = 64 }: { data: number[]; color?: string; h?: number }) {
   const id = useId()
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-40px' })
   const w = 240
   const max = Math.max(...data), min = Math.min(...data)
   const pts = data.map((v, i) => [(i / (data.length - 1)) * w, h - 4 - ((v - min) / (max - min || 1)) * (h - 12)] as const)
   const d = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ')
   return (
-    <svg ref={ref} viewBox={`0 0 ${w} ${h}`} className="cmd-area" preserveAspectRatio="none" aria-hidden>
+    <svg viewBox={`0 0 ${w} ${h}`} className="cmd-area" preserveAspectRatio="none" aria-hidden>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={color} stopOpacity=".22" /><stop offset="1" stopColor={color} stopOpacity="0" /></linearGradient>
       </defs>
-      <motion.path d={`${d} L${w} ${h} L0 ${h} Z`} fill={`url(#${id})`} initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.8, delay: 0.3 }} />
-      <motion.path d={d} fill="none" stroke={color} strokeWidth="1.6" vectorEffect="non-scaling-stroke" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}} transition={{ duration: 1.1, ease: 'easeOut' }} />
+      <path d={`${d} L${w} ${h} L0 ${h} Z`} fill={`url(#${id})`} />
+      <path d={d} fill="none" stroke={color} strokeWidth="1.6" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -44,10 +39,10 @@ function Dashboard() {
       <div className="cmd-card cmd-card--c">
         <div className="cmd-card__t">Citations by engine</div>
         <ul className="cmd-hbars">
-          {cites.map(([n, v, p], i) => (
+          {cites.map(([n, v, p]) => (
             <li key={n}>
               <span><EngineLogo engine={n} size={13} />{n}</span>
-              <div><motion.i initial={{ width: 0 }} whileInView={{ width: `${v}%` }} viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.06, ease: [0.2, 0.8, 0.2, 1] }} /></div>
+              <div><i style={{ width: `${v}%` }} /></div>
               <em className="mono">{p}</em>
             </li>
           ))}
@@ -80,13 +75,13 @@ function PowerTable() {
           <thead><tr><th>#</th><th>Prompt cluster</th><th>Prompts moved up</th><th>Runs</th><th>Active days</th></tr></thead>
           <tbody>
             {rows.map(([n, up, runs, days], i) => (
-              <motion.tr key={n} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+              <tr key={n}>
                 <td className="mono">{i + 1}</td>
                 <td>{n}</td>
                 <td><div className="cmd-tb"><i style={{ width: `${(up / max) * 100}%` }} /><span>{up}</span></div></td>
                 <td className="mono">{runs}</td>
                 <td className="mono">{days}</td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -107,19 +102,17 @@ function AlertsViz() {
           </button>
         ))}
       </div>
-      <AnimatePresence mode="popLayout">
-        {slack ? (
-          <motion.div key="msg" className="cmd-msg" initial={{ opacity: 0, y: 14, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}>
-            <div className="cmd-msg__av"><LogoMark size={22} /></div>
-            <div><b>Upstream</b> <span>just now</span>
-              <p>Citation change: <strong>Tracewell</strong> moved from 3rd to 1st for "best tracing SDK" on Perplexity.</p></div>
-          </motion.div>
-        ) : <motion.p key="off" className="cmd-off" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Slack alerts are off</motion.p>}
-      </AnimatePresence>
+      {slack ? (
+        <div className="cmd-msg">
+          <div className="cmd-msg__av"><LogoMark size={22} /></div>
+          <div><b>Upstream</b> <span>just now</span>
+            <p>Citation change: <strong>Tracewell</strong> moved from 3rd to 1st for "best tracing SDK" on Perplexity.</p></div>
+        </div>
+      ) : <p className="cmd-off">Slack alerts are off</p>}
       {csv && (
-        <motion.div className="cmd-file" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+        <div className="cmd-file">
           <FileSpreadsheet size={14} /> citations-weekly.csv <span className="mono">Sample</span>
-        </motion.div>
+        </div>
       )}
     </div>
   )
@@ -135,71 +128,34 @@ function ReportViz() {
         {sources.map(({ n, I }) => <div key={n} title={n} className="cmd-report__ic"><I size={16} /></div>)}
       </div>
       <svg viewBox="0 0 500 90" preserveAspectRatio="none" className="cmd-report__lines" aria-hidden>
-        {[50, 150, 250, 350, 450].map((x) => <path key={x} d={`M${x} 0 C ${x} 50, 250 40, 250 90`} fill="none" stroke="var(--fg-4)" strokeWidth="1" strokeDasharray="3 4" vectorEffect="non-scaling-stroke" className="cmd-dash-flow" />)}
+        {[50, 150, 250, 350, 450].map((x) => <path key={x} d={`M${x} 0 C ${x} 50, 250 40, 250 90`} fill="none" stroke="var(--fg-4)" strokeWidth="1" strokeDasharray="3 4" vectorEffect="non-scaling-stroke" />)}
       </svg>
       <div className="cmd-report__hub"><LogoMark size={36} /><span className="cmd-report__mail"><Mail size={12} /> Weekly email report</span></div>
     </div>
   )
 }
 
-const VIEW_TRAVEL = 420
-
 export function Command() {
-  const [view, setView] = useState(0)
-  const [stageH, setStageH] = useState(0)
-  const views = 2
-  const runway = useRef<HTMLDivElement>(null)
-  const stick = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = stick.current
-    if (!el) return
-    const ro = new ResizeObserver(() => setStageH(el.offsetHeight))
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  useRunway(runway, VIEW_TRAVEL, (p) => setView(p < 0.5 ? 0 : 1))
-
-  const goTo = (v: number) => {
-    if (runway.current) scrollToY(runwayY(runway.current, VIEW_TRAVEL, v === 0 ? 0 : 1))
-  }
-
   return (
     <section className="sec sec--top sec--bottom cmd" id="command">
       <div className="shell">
         <div className="sec-head cmd-head">
-          <Reveal className="sec-head__text">
+          <div className="sec-head__text">
             <h2 className="h2">Built for teams that act on the data every week</h2>
             <p className="lead">Track runs, share what changed and keep everyone on the same citation numbers.</p>
-          </Reveal>
-        </div>
-        <div className="cmd-big">
-          <div className="cmd-big__head">
-            <div>
-              <h3 className="cmd-big__title">Track every scan with the Command Center</h3>
-              <p className="lead" style={{ marginTop: 8 }}>See how runs, engines and prompts are moving across your team.</p>
-              <button type="button" className="btn btn--secondary" style={{ marginTop: 24 }} onClick={() => goTo(view === 0 ? 1 : 0)}>Explore Command Center</button>
-            </div>
-            <div className="sec-head__actions">
-              <button type="button" className="iconbtn" aria-label="Previous view" disabled={view === 0} onClick={() => goTo(0)}><ChevronLeft size={16} /></button>
-              <button type="button" className="iconbtn" aria-label="Next view" disabled={view === views - 1} onClick={() => goTo(1)}><ChevronRight size={16} /></button>
-            </div>
-          </div>
-          <div ref={runway} className="cmd-run" style={{ height: stageH ? stageH + VIEW_TRAVEL : undefined }}>
-            <div ref={stick} className="cmd-stage" aria-live="polite">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div key={view} initial={{ opacity: 0, x: view ? 40 : -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: view ? -40 : 40 }} transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}>
-                  {view === 0 ? <Dashboard /> : <PowerTable />}
-                </motion.div>
-              </AnimatePresence>
-              <div className="cmd-dots" role="tablist" aria-label="Command Center views">
-                {['Overview', 'Prompt clusters'].map((l, i) => <button key={l} type="button" role="tab" aria-selected={view === i} aria-label={l} onClick={() => goTo(i)} />)}
-              </div>
-            </div>
           </div>
         </div>
-        <div className="cg cg--2 cmd-cells">
+        <div className="cmd-panels">
+          <div className="cmd-panel">
+            <h3 className="cmd-panel__title">Track every scan with the Command Center</h3>
+            <p className="lead">See how runs, engines and prompts are moving across your team.</p>
+            <Dashboard />
+          </div>
+          <div className="cmd-panel">
+            <PowerTable />
+          </div>
+        </div>
+        <div className="cmd-cells">
           <div className="cmd-cell">
             <h3 className="cmd-cell__title">Slack alerts and CSV export</h3>
             <p className="lead">Send citation changes where your team already works.</p>

@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { AnimatePresence, motion, useInView } from 'motion/react'
+import { useRef, useState, type KeyboardEvent } from 'react'
 import { ChevronRight, FileText, Link2, ListChecks, MessageSquare, Search, Send, BarChart3, Sparkles, Mail, type LucideIcon } from 'lucide-react'
-import { Reveal } from './Reveal'
 import '../styles/marketer.css'
 
 type Row = { icon: LucideIcon; name: string; meta: string }
@@ -18,8 +16,6 @@ type Tab = {
   done: string
   rows: Row[]
 }
-
-const AUTO_MS = 6000
 
 const TABS: Tab[] = [
   {
@@ -131,36 +127,21 @@ function Glyph() {
 
 export function Marketer() {
   const [active, setActive] = useState(0)
-  const [touched, setTouched] = useState(false)
   const [done, setDone] = useState<Record<string, boolean>>({})
-  const gridRef = useRef<HTMLDivElement>(null)
-  const inView = useInView(gridRef, { margin: '-20% 0px -20% 0px' })
   const refs = useRef<(HTMLButtonElement | null)[]>([])
-  const auto = inView && !touched
   const tab = TABS[active]
-
-  useEffect(() => {
-    if (!auto) return
-    const t = setTimeout(() => setActive((a) => (a + 1) % TABS.length), AUTO_MS)
-    return () => clearTimeout(t)
-  }, [auto, active])
-
-  const select = (i: number) => {
-    setTouched(true)
-    setActive(i)
-  }
 
   const onKey = (e: KeyboardEvent) => {
     const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
     if (e.key === 'Home' || e.key === 'End') {
       e.preventDefault()
       const i = e.key === 'Home' ? 0 : TABS.length - 1
-      select(i)
+      setActive(i)
       refs.current[i]?.focus()
     } else if (dir) {
       e.preventDefault()
       const i = (active + dir + TABS.length) % TABS.length
-      select(i)
+      setActive(i)
       refs.current[i]?.focus()
     }
   }
@@ -169,14 +150,12 @@ export function Marketer() {
     <section className="sec" id="product">
       <div className="shell">
         <div className="sec-head">
-          <Reveal>
-            <div className="sec-head__text">
-              <h2 className="h2"><Glyph />Upstream makes it possible</h2>
-              <p className="lead">It finds the work worth doing, drafts it, and pings you for approval.</p>
-            </div>
-          </Reveal>
+          <div className="sec-head__text">
+            <h2 className="h2"><Glyph />Upstream makes it possible</h2>
+            <p className="lead">It finds the work worth doing, drafts it, and pings you for approval.</p>
+          </div>
         </div>
-        <div className="cg cg--2 mk__grid" ref={gridRef}>
+        <div className="mk__grid">
           <div className="mk__left">
             <div className="mk__tabs" role="tablist" aria-label="What Upstream does" onKeyDown={onKey}>
               {TABS.map((t, i) => (
@@ -189,57 +168,42 @@ export function Marketer() {
                   aria-controls="mk-panel"
                   tabIndex={i === active ? 0 : -1}
                   className="pilltab"
-                  onClick={() => select(i)}
+                  onClick={() => setActive(i)}
                 >
                   <t.icon aria-hidden />
                   {t.label}
                 </button>
               ))}
             </div>
-            <div className="mk__copy">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div key={tab.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-                  <h3 className="mk__title">{tab.title}</h3>
-                  <p className="mk__desc">{tab.desc}</p>
-                </motion.div>
-              </AnimatePresence>
-              <div className="mk__bar" data-paused={!auto} aria-hidden>
-                {TABS.map((t, i) => (
-                  <span key={t.id} data-active={i === active && auto} data-done={i < active || (i === active && !auto)}>
-                    <i key={`${active}-${auto}`} style={{ ['--mk-dur' as string]: `${AUTO_MS}ms` }} />
-                  </span>
-                ))}
-              </div>
+            <div key={tab.id} className="mk__copy fx-fade">
+              <h3 className="mk__title">{tab.title}</h3>
+              <p className="mk__desc">{tab.desc}</p>
             </div>
           </div>
           <div className="mk__right" role="tabpanel" id="mk-panel" aria-labelledby={`mk-tab-${tab.id}`}>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div key={tab.id} className="mk__chat" exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
-                <motion.div className="mk__user" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}>
-                  {tab.user}
-                </motion.div>
-                <motion.div className="mk__bot" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.25, ease: [0.2, 0.8, 0.2, 1] }}>
-                  <span className="mk__bot-ic"><Sparkles color="#8b7bff" aria-hidden /></span>
-                  <span>{tab.bot}</span>
-                </motion.div>
-                <motion.div className="mk__list" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
-                  <div className="mk__list-head">
-                    <span>{tab.listTitle}</span>
-                    <button className="mk__pub" data-done={!!done[tab.id]} onClick={() => setDone((d) => ({ ...d, [tab.id]: !d[tab.id] }))}>
-                      {done[tab.id] ? tab.done : tab.action}
-                    </button>
+            <div key={tab.id} className="mk__chat fx-fade">
+              <div className="mk__user">{tab.user}</div>
+              <div className="mk__bot">
+                <span className="mk__bot-ic"><Sparkles color="#8b7bff" aria-hidden /></span>
+                <span>{tab.bot}</span>
+              </div>
+              <div className="mk__list">
+                <div className="mk__list-head">
+                  <span>{tab.listTitle}</span>
+                  <button className="mk__pub" data-done={!!done[tab.id]} onClick={() => setDone((d) => ({ ...d, [tab.id]: !d[tab.id] }))}>
+                    {done[tab.id] ? tab.done : tab.action}
+                  </button>
+                </div>
+                {tab.rows.map((r) => (
+                  <div key={r.name} className="mk__row">
+                    <r.icon aria-hidden />
+                    <span className="mk__row-name">{r.name}</span>
+                    <span className="mk__row-meta">{r.meta}</span>
+                    <ChevronRight className="mk__row-chev" aria-hidden />
                   </div>
-                  {tab.rows.map((r, i) => (
-                    <motion.div key={r.name} className="mk__row" initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.35, delay: 0.65 + i * 0.07 }}>
-                      <r.icon aria-hidden />
-                      <span className="mk__row-name">{r.name}</span>
-                      <span className="mk__row-meta">{r.meta}</span>
-                      <ChevronRight className="mk__row-chev" aria-hidden />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

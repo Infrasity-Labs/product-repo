@@ -1,0 +1,9 @@
+.cursor-dot {
+  position: fixed; left: -4px; top: -4px; z-index: 300; width: 8px; height: 8px; border-radius: 50%;
+  background: #0f0f12; pointer-events: none; opacity: 0; will-change: transform;
+  transition: opacity 0.15s;
+}
+.cursor-dot[data-on='true'] { opacity: 1; }
+/* over links and buttons the dot swells into a faint halo so it never hides the label */
+.cursor-dot[data-hover='true'] { opacity: 0.18; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .cursor-dot { display: none; } }

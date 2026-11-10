@@ -179,7 +179,7 @@ export function DataView({ tabId }: { tabId: string }) {
           {tab.cols.map((c) => <span key={c}>{c}</span>)}
         </div>
         {tab.rows.map((row, i) => (
-          <div className="dd-table__row" key={i} style={{ animationDelay: `${i * 45}ms` }}>
+          <div className="dd-table__row" key={i}>
             {row.map((cell, j) => <span key={j}><CellView cell={cell} /></span>)}
           </div>
         ))}

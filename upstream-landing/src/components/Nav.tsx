@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { useEffect, useRef, useState, type FocusEvent, type ReactNode } from 'react'
 import {
   ArrowRight, BookOpen, Building2, ChevronDown, Code2, Gauge, HeartPulse, Layers, Link2, ListChecks, Mail,
   Menu, MessageCircle, MessagesSquare, Rocket, Route, Sparkles, Users, X,
@@ -110,18 +109,7 @@ const plain = [
 export function Nav() {
   const [open, setOpen] = useState<string | null>(null)
   const [mobile, setMobile] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const closeTimer = useRef<number | undefined>(undefined)
   const navRef = useRef<HTMLDivElement>(null)
-
-  const show = useCallback((id: string) => {
-    window.clearTimeout(closeTimer.current)
-    setOpen(id)
-  }, [])
-  const hide = useCallback(() => {
-    window.clearTimeout(closeTimer.current)
-    closeTimer.current = window.setTimeout(() => setOpen(null), 120)
-  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -133,15 +121,11 @@ export function Nav() {
     const onDown = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) setOpen(null)
     }
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
     window.addEventListener('keydown', onKey)
     window.addEventListener('mousedown', onDown)
-    window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.removeEventListener('keydown', onKey)
       window.removeEventListener('mousedown', onDown)
-      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 
@@ -152,6 +136,10 @@ export function Nav() {
     }
   }, [mobile])
 
+  const onBlur = (e: FocusEvent<HTMLElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) setOpen(null)
+  }
+
   const go = () => {
     setOpen(null)
     setMobile(false)
@@ -160,14 +148,14 @@ export function Nav() {
   const active = menus.find((m) => m.id === open)
 
   return (
-    <div className={`nv ${scrolled ? 'nv--scrolled' : ''}`}>
+    <div className="nv">
       <header className="nv__bar">
         <div className="nv__inner" ref={navRef}>
           <a href="#top" className="nv__logo" aria-label="Upstream home">
             <Logo />
           </a>
 
-          <nav className="nv__links" aria-label="Primary" onMouseLeave={hide}>
+          <nav className="nv__links" aria-label="Primary" onMouseLeave={() => setOpen(null)} onBlur={onBlur}>
             {menus.map((m) => (
               <button
                 key={m.id}
@@ -175,9 +163,9 @@ export function Nav() {
                 className="nv__link"
                 aria-expanded={open === m.id}
                 aria-haspopup="true"
-                onMouseEnter={() => show(m.id)}
-                onFocus={() => show(m.id)}
-                onClick={() => setOpen(open === m.id ? null : m.id)}
+                onMouseEnter={() => setOpen(m.id)}
+                onFocus={() => setOpen(m.id)}
+                onClick={() => setOpen(m.id)}
               >
                 {m.label}
                 <ChevronDown size={14} className="nv__chev" />
@@ -189,42 +177,31 @@ export function Nav() {
               </a>
             ))}
 
-            <AnimatePresence>
-              {active && (
-                <motion.div
-                  key={active.id}
-                  className={`nv__panel ${active.wide ? 'nv__panel--wide' : ''} nv__panel--${active.id}`}
-                  initial={{ opacity: 0, y: -6, scale: 0.985 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.99, transition: { duration: 0.1 } }}
-                  transition={{ duration: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
-                  onMouseEnter={() => show(active.id)}
-                  onMouseLeave={hide}
-                >
-                  <div className="nv__cols" style={{ gridTemplateColumns: `repeat(${active.groups.length}, 1fr)` }}>
-                    {active.groups.map((g) => (
-                      <div key={g.label} className="nv__col">
-                        <div className="nv__label">{g.label}</div>
-                        {g.items.map((it) => (
-                          <a key={it.title} href={it.href} className="nv__item" onClick={go}>
-                            <span className="nv__icon">{it.icon}</span>
-                            <span>
-                              <span className="nv__title">{it.title}</span>
-                              <span className="nv__desc">{it.desc}</span>
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                  {active.featured && (
-                    <div className="nv__featured" onClick={go}>
-                      {active.featured}
+            {active && (
+              <div className={`nv__panel ${active.wide ? 'nv__panel--wide' : ''} nv__panel--${active.id}`}>
+                <div className="nv__cols" style={{ gridTemplateColumns: `repeat(${active.groups.length}, 1fr)` }}>
+                  {active.groups.map((g) => (
+                    <div key={g.label} className="nv__col">
+                      <div className="nv__label">{g.label}</div>
+                      {g.items.map((it) => (
+                        <a key={it.title} href={it.href} className="nv__item" onClick={go}>
+                          <span className="nv__icon">{it.icon}</span>
+                          <span>
+                            <span className="nv__title">{it.title}</span>
+                            <span className="nv__desc">{it.desc}</span>
+                          </span>
+                        </a>
+                      ))}
                     </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  ))}
+                </div>
+                {active.featured && (
+                  <div className="nv__featured" onClick={go}>
+                    {active.featured}
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
 
           <div className="nv__cta">
@@ -251,31 +228,23 @@ export function Nav() {
         </a>
       </div>
 
-      <AnimatePresence>
-        {mobile && (
-          <motion.nav
-            className="nv__mobile"
-            aria-label="Mobile"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            {menus.map((m) => (
-              <details key={m.id} className="nv__m-group">
-                <summary>{m.label}<ChevronDown size={16} /></summary>
-                {m.groups.flatMap((g) => g.items).map((it) => (
-                  <a key={it.title} href={it.href} onClick={go}>{it.title}</a>
-                ))}
-              </details>
-            ))}
-            {plain.map((p) => (
-              <a key={p.href} href={p.href} className="nv__m-link" onClick={go}>{p.label}</a>
-            ))}
-            <a href="#start" className="btn btn--primary btn--lg btn--block" onClick={go}>Get a demo</a>
-          </motion.nav>
-        )}
-      </AnimatePresence>
+      {mobile && (
+        <nav className="nv__mobile" aria-label="Mobile" data-lenis-prevent>
+          {menus.map((m) => (
+            <details key={m.id} className="nv__m-group">
+              <summary>{m.label}<ChevronDown size={16} /></summary>
+              {m.groups.flatMap((g) => g.items).map((it) => (
+                <a key={it.title} href={it.href} onClick={go}>{it.title}</a>
+              ))}
+            </details>
+          ))}
+          {plain.map((p) => (
+            <a key={p.href} href={p.href} className="nv__m-link" onClick={go}>{p.label}</a>
+          ))}
+          <a href="#start" className="btn btn--primary btn--lg btn--block" onClick={go}>Get a demo</a>
+
+        </nav>
+      )}
     </div>
   )
 }

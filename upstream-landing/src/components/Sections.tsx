@@ -1,6 +1,7 @@
 import { Problem } from './Problem'
 import { Marketer } from './Marketer'
 import { Context } from './Context'
+import { Steps } from './Steps'
 import { Results } from './Results'
 import { Reinforced } from './Reinforced'
 import { Command } from './Command'
@@ -10,13 +11,14 @@ import { Pricing } from './Pricing'
 import { Faq } from './Faq'
 import { FinalCta } from './FinalCta'
 
-/** Everything below the engine strip. Loaded as its own chunk after the hero has painted. */
+/** Everything below the hero. */
 export default function Sections() {
   return (
     <>
       <Problem />
       <Marketer />
       <Context />
+      <Steps />
       <Results />
       <Reinforced />
       <Command />

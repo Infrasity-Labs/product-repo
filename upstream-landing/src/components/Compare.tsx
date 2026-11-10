@@ -1,6 +1,5 @@
 import { Check, Minus, X } from 'lucide-react'
 import { compareRows } from '../content'
-import { Reveal } from './Reveal'
 import { LogoMark } from './Logo'
 import '../styles/compare.css'
 
@@ -11,12 +10,13 @@ export function Compare() {
     <section className="sec" id="why">
       <div className="shell">
         <div className="sec-head">
-          <Reveal className="sec-head__text">
+          <div className="sec-head__text">
+            <p className="eyebrow">Why Upstream</p>
             <h2 className="h2">Why not a general AI-visibility tool?</h2>
             <p className="lead">General tools are built for consumer brands. Upstream is built for how engineers choose software.</p>
-          </Reveal>
+          </div>
         </div>
-        <Reveal className="cmp-wrap">
+        <div className="cmp-wrap">
           <div className="cmp-table" role="table" aria-label="Upstream compared with general AI-visibility tools">
             <div className="cmp-row cmp-row--head" role="row">
               <div className="cmp-c" role="columnheader">Criterion</div>
@@ -39,7 +39,7 @@ export function Compare() {
               </div>
             ))}
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   )

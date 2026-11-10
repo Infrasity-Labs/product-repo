@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import {
   ArrowUp, ChevronDown, ChevronsUpDown, Download, FileText, Gauge, Inbox, Link2, ListChecks, MessageCircle,
-  MessagesSquare, Mic, PanelRight, Plus, Sparkles, X, Layers, HeartPulse, Check, Loader2,
+  MessagesSquare, Mic, PanelRight, Plus, Sparkles, X, Layers, HeartPulse, Check,
 } from 'lucide-react'
 import { GapDoc, RedditDoc, ListicleDoc, DataView } from './DemoDocs'
 import '../styles/demo.css'
@@ -68,71 +67,28 @@ const dataNav: { id: string; label: string; icon: ReactNode }[] = [
 
 type Msg = { role: 'user' | 'bot'; text: string }
 
-/** Reveals text word by word, then calls onDone once. */
-function Typed({ text, onDone }: { text: string; onDone: () => void }) {
-  const words = text.split(' ')
-  const reduce = useRef(typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-  const [n, setN] = useState(reduce.current ? words.length : 0)
-  const done = useRef(onDone)
-  done.current = onDone
-
-  useEffect(() => {
-    if (n >= words.length) {
-      done.current()
-      return
-    }
-    const t = window.setTimeout(() => setN((v) => v + 2), 24)
-    return () => window.clearTimeout(t)
-  }, [n, words.length])
-
-  return (
-    <p className="ad-bot">
-      {words.slice(0, n).join(' ')}
-      {n < words.length && <span className="ad-caret" />}
-    </p>
-  )
-}
-
 export function AppDemo() {
   const [mode, setMode] = useState<'assistant' | 'analytics'>('assistant')
   const [view, setView] = useState('overview')
   const [convId, setConvId] = useState('gap')
-  const [stage, setStage] = useState(0)
   const [extra, setExtra] = useState<Msg[]>([])
   const [draft, setDraft] = useState('')
-  const [thinking, setThinking] = useState(false)
   const [preview, setPreview] = useState(true)
   const [exported, setExported] = useState(false)
   const body = useRef<HTMLDivElement>(null)
-  const timers = useRef<number[]>([])
 
   const conv = convs.find((c) => c.id === convId) ?? convs[0]
 
-  const clear = useCallback(() => {
-    timers.current.forEach((t) => window.clearTimeout(t))
-    timers.current = []
-  }, [])
-
-  // Replay the scripted answer whenever the conversation changes.
-  useEffect(() => {
-    clear()
-    setStage(0)
-    setExtra([])
-    setThinking(false)
-    setExported(false)
-    timers.current.push(window.setTimeout(() => setStage(1), 450))
-    timers.current.push(window.setTimeout(() => setStage(2), 1300))
-    return clear
-  }, [convId, clear])
-
   useEffect(() => {
     const el = body.current
-    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
-  }, [stage, extra, thinking])
+    if (el) el.scrollTop = el.scrollHeight
+  }, [extra])
 
   const openConv = (id: string) => {
     setMode('assistant')
     setConvId(id)
+    setExtra([])
+    setExported(false)
     setPreview(true)
   }
   const openView = (id: string) => {
@@ -143,24 +99,13 @@ export function AppDemo() {
   const submit = (e: FormEvent) => {
     e.preventDefault()
     const q = draft.trim()
-    if (!q || thinking) return
+    if (!q) return
     setDraft('')
-    setExtra((m) => [...m, { role: 'user', text: q }])
-    setThinking(true)
-    timers.current.push(
-      window.setTimeout(() => {
-        setThinking(false)
-        setExtra((m) => [
-          ...m,
-          { role: 'bot', text: `Looking into "${q}" across all 8 engines now. I will stage anything I change as a draft, and nothing goes live until you approve it.` },
-        ])
-      }, 1100),
-    )
-  }
-
-  const doExport = () => {
-    setExported(true)
-    timers.current.push(window.setTimeout(() => setExported(false), 1800))
+    setExtra((m) => [
+      ...m,
+      { role: 'user', text: q },
+      { role: 'bot', text: `Looking into "${q}" across all 8 engines now. I will stage anything I change as a draft, and nothing goes live until you approve it.` },
+    ])
   }
 
   return (
@@ -202,96 +147,83 @@ export function AppDemo() {
           <div className="ad__sample">Sample data</div>
         </aside>
 
-        <AnimatePresence mode="wait" initial={false}>
-          {mode === 'analytics' ? (
-            <motion.div key="data" className="ad__main" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+        {mode === 'analytics' ? (
+          <div className="ad__main">
+            <div className="ad__head">
+              <span className="ad__title">Analytics</span>
+              <span className="ad__live"><i /> Live</span>
+            </div>
+            <DataView tabId={view} />
+          </div>
+        ) : (
+          <div className="ad__split">
+            {/* chat */}
+            <section className="ad__chat">
               <div className="ad__head">
-                <span className="ad__title">Analytics</span>
-                <span className="ad__live"><i /> Live</span>
+                <span className="ad__title">{conv.title} <ChevronDown size={12} /></span>
+                <button type="button" className="ad__icon" aria-label={preview ? 'Hide preview' : 'Show preview'} onClick={() => setPreview((v) => !v)}>
+                  <PanelRight size={15} />
+                </button>
               </div>
-              <DataView tabId={view} />
-            </motion.div>
-          ) : (
-            <motion.div key="chat" className="ad__split" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
-              {/* chat */}
-              <section className="ad__chat">
-                <div className="ad__head">
-                  <span className="ad__title">{conv.title} <ChevronDown size={12} /></span>
-                  <button type="button" className="ad__icon" aria-label={preview ? 'Hide preview' : 'Show preview'} onClick={() => setPreview((v) => !v)}>
-                    <PanelRight size={15} />
+
+              <div className="ad__scroll" ref={body} data-lenis-prevent>
+                <div className="ad__bubble">{conv.user}</div>
+
+                {conv.reply.map((p, i) => <p className="ad-bot" key={i}>{p}</p>)}
+
+                <div className="ad__worked"><Check size={12} /> Worked for <b>10s</b></div>
+
+                <button type="button" className="ad__exec" onClick={() => setPreview(true)}>
+                  <span>Executed</span>
+                  <b><Sparkles size={12} /> {conv.agent}</b>
+                  <em>{conv.docTitle}</em>
+                </button>
+
+                {extra.map((m, i) =>
+                  m.role === 'user' ? (
+                    <div className="ad__bubble" key={i}>{m.text}</div>
+                  ) : (
+                    <p className="ad-bot" key={i}>{m.text}</p>
+                  ),
+                )}
+              </div>
+
+              <form className="ad__input" onSubmit={submit}>
+                <input
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  placeholder="Ask a question or make a change"
+                  aria-label="Ask the assistant"
+                />
+                <div className="ad__input-row">
+                  <button type="button" className="ad__icon" aria-label="Attach"><Plus size={15} /></button>
+                  <span className="ad__spacer" />
+                  <button type="button" className="ad__icon" aria-label="Dictate"><Mic size={14} /></button>
+                  <button type="submit" className="ad__send" aria-label="Send" disabled={!draft.trim()}><ArrowUp size={14} /></button>
+                </div>
+              </form>
+            </section>
+
+            {/* preview */}
+            {preview && (
+              <section className="ad__preview">
+                <div className="ad__tabs">
+                  <span className="ad__tab"><FileText size={12} /> {conv.docTitle}
+                    <button type="button" aria-label="Close preview" onClick={() => setPreview(false)}><X size={12} /></button>
+                  </span>
+                  <button type="button" className="ad__icon" aria-label="New tab"><Plus size={14} /></button>
+                </div>
+                <div className="ad__phead">
+                  <span>{conv.docTitle}</span>
+                  <button type="button" className="ad__export" onClick={() => setExported((v) => !v)}>
+                    {exported ? <><Check size={12} /> Exported</> : <><Download size={12} /> Export</>}
                   </button>
                 </div>
-
-                <div className="ad__scroll" ref={body} data-lenis-prevent>
-                  <div className="ad__bubble ad__in">{conv.user}</div>
-
-                  {stage >= 1 && (
-                    <div className="ad__worked ad__in">
-                      {stage < 3 ? <Loader2 size={12} className="ad__spin" /> : <Check size={12} />}
-                      {stage < 3 ? 'Working' : <>Worked for <b>10s</b></>}
-                    </div>
-                  )}
-
-                  {stage >= 2 && <Typed key={`${convId}-0`} text={conv.reply[0]} onDone={() => setStage((s) => Math.max(s, 3))} />}
-                  {stage >= 3 && <Typed key={`${convId}-1`} text={conv.reply[1]} onDone={() => setStage((s) => Math.max(s, 4))} />}
-
-                  {stage >= 4 && (
-                    <button type="button" className="ad__exec ad__in" onClick={() => setPreview(true)}>
-                      <span>Executed</span>
-                      <b><Sparkles size={12} /> {conv.agent}</b>
-                      <em>{conv.docTitle}</em>
-                    </button>
-                  )}
-
-                  {extra.map((m, i) =>
-                    m.role === 'user' ? (
-                      <div className="ad__bubble ad__in" key={i}>{m.text}</div>
-                    ) : (
-                      <p className="ad-bot ad__in" key={i}>{m.text}</p>
-                    ),
-                  )}
-                  {thinking && (
-                    <div className="ad__worked ad__in"><Loader2 size={12} className="ad__spin" /> Working</div>
-                  )}
-                </div>
-
-                <form className="ad__input" onSubmit={submit}>
-                  <input
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    placeholder="Ask a question or make a change"
-                    aria-label="Ask the assistant"
-                  />
-                  <div className="ad__input-row">
-                    <button type="button" className="ad__icon" aria-label="Attach"><Plus size={15} /></button>
-                    <span className="ad__spacer" />
-                    <button type="button" className="ad__icon" aria-label="Dictate"><Mic size={14} /></button>
-                    <button type="submit" className="ad__send" aria-label="Send" disabled={!draft.trim()}><ArrowUp size={14} /></button>
-                  </div>
-                </form>
+                <div className="ad__doc" key={conv.id}>{conv.doc}</div>
               </section>
-
-              {/* preview */}
-              {preview && (
-                <motion.section className="ad__preview" initial={{ opacity: 0 }} animate={{ opacity: stage >= 3 ? 1 : 0.35 }} transition={{ duration: 0.4 }}>
-                  <div className="ad__tabs">
-                    <span className="ad__tab"><FileText size={12} /> {conv.docTitle}
-                      <button type="button" aria-label="Close preview" onClick={() => setPreview(false)}><X size={12} /></button>
-                    </span>
-                    <button type="button" className="ad__icon" aria-label="New tab"><Plus size={14} /></button>
-                  </div>
-                  <div className="ad__phead">
-                    <span>{conv.docTitle}</span>
-                    <button type="button" className="ad__export" onClick={doExport}>
-                      {exported ? <><Check size={12} /> Exported</> : <><Download size={12} /> Export</>}
-                    </button>
-                  </div>
-                  <div className="ad__doc" key={conv.id}>{conv.doc}</div>
-                </motion.section>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,8 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { animate, motion, useInView } from 'motion/react'
+import { useState } from 'react'
 import { ArrowUp, ChevronDown, CircleAlert, Info, MessageSquare } from 'lucide-react'
-import { CarouselControls, CarouselItem, CarouselProvider, CarouselTrack } from './Carousel'
-import { Reveal } from './Reveal'
 import { EngineLogo } from './EngineLogo'
 import '../styles/reinforced.css'
 
@@ -19,8 +16,6 @@ function LineViz() {
   const [metric, setMetric] = useState<Metric>('bot')
   const [hidden, setHidden] = useState<Set<string>>(new Set())
   const [hover, setHover] = useState<number | null>(null)
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
   const W = 340, H = 190, L = 34, R = 8, T = 10, B = 20
   const visible = series.filter((s) => !hidden.has(s.id))
   const rawMax = Math.max(...visible.flatMap((s) => s.data[metric]), 1)
@@ -44,7 +39,7 @@ function LineViz() {
         ))}
       </div>
       <div className="rf-line__chart">
-        <svg ref={ref} viewBox={`0 0 ${W} ${H}`} onPointerMove={onMove} onPointerLeave={() => setHover(null)} role="img" aria-label={`${metric === 'bot' ? 'Bot visits' : 'AI referral visits'} by engine, weekly`}>
+        <svg viewBox={`0 0 ${W} ${H}`} onPointerMove={onMove} onPointerLeave={() => setHover(null)} role="img" aria-label={`${metric === 'bot' ? 'Bot visits' : 'AI referral visits'} by engine, weekly`}>
           {ticks.map((t) => (
             <g key={t}>
               <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeDasharray="3 4" />
@@ -56,8 +51,7 @@ function LineViz() {
           {visible.map((s) => {
             const d = s.data[metric].map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')
             return (
-              <motion.path key={s.id} d={d} fill="none" stroke={s.color} strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round"
-                initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1, d } : { pathLength: 0 }} transition={{ duration: 1, ease: 'easeOut', d: { duration: 0.4 } }} />
+              <path key={s.id} d={d} fill="none" stroke={s.color} strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
             )
           })}
           {hover !== null && visible.map((s) => <circle key={s.id} cx={x(hover)} cy={y(s.data[metric][hover])} r="3.5" fill="var(--surface)" stroke={s.color} strokeWidth="2" />)}
@@ -81,22 +75,15 @@ function LineViz() {
 }
 
 function GaugeViz() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
   const cx = 150, cy = 150, r = 110
-  const [angle, setAngle] = useState(-90)
-  useEffect(() => {
-    if (!inView) return
-    const c = animate(-90, -90 + (82 / 100) * 180, { type: 'spring', stiffness: 50, damping: 11, delay: 0.5, onUpdate: setAngle })
-    return () => c.stop()
-  }, [inView])
+  const angle = -90 + (82 / 100) * 180
   const pt = (pct: number, rad = r) => { const a = Math.PI * (1 - pct / 100); return [cx + rad * Math.cos(a), cy - rad * Math.sin(a)] }
   const arc = (a: number, b: number) => { const [x1, y1] = pt(a), [x2, y2] = pt(b); return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}` }
   const bands: [number, number, string][] = [[0, 25, '#e5e5e8'], [26, 50, '#d6d6db'], [51, 75, '#b9b0fa'], [76, 100, 'var(--brand)']]
   return (
-    <div ref={ref} className="rf-gauge">
+    <div className="rf-gauge">
       <svg viewBox="0 0 300 162" role="img" aria-label="Percentile 82, target 90 to 100">
-        {bands.map(([a, b, c], i) => <motion.path key={i} d={arc(a + 0.8, b - 0.8)} fill="none" stroke={c} strokeWidth="16" strokeLinecap="round" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: i * 0.12 }} />)}
+        {bands.map(([a, b, c], i) => <path key={i} d={arc(a + 0.8, b - 0.8)} fill="none" stroke={c} strokeWidth="16" strokeLinecap="round" />)}
         {[0, 25, 50, 75, 100].map((t) => { const [tx, ty] = pt(t, 134); return <text key={t} x={tx} y={ty + 3} textAnchor="middle" className="rf-tick">{t}</text> })}
         <g transform={`rotate(${angle} ${cx} ${cy})`}>
           <path d={`M${cx - 6} ${cy} L${cx} ${cy - 96} L${cx + 6} ${cy} Z`} fill="var(--fg)" />
@@ -123,9 +110,7 @@ function AlertViz() {
         <button type="button" className="rf-alert__why" aria-expanded={open} onClick={() => setOpen(!open)}>
           <Info size={14} /> Why it's inaccurate <ChevronDown size={14} className="rf-alert__chev" data-open={open} />
         </button>
-        <motion.div initial={false} animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }} style={{ overflow: 'hidden' }} transition={{ duration: 0.25 }}>
-          <p className="rf-alert__why-body">The claim says 4 SDKs, but the knowledge base says Tracewell ships 12 (JS, Python, Go, Java, Ruby, PHP, Rust, Swift, Kotlin, .NET, Elixir, Dart).</p>
-        </motion.div>
+        {open && <p className="rf-alert__why-body">The claim says 4 SDKs, but the knowledge base says Tracewell ships 12 (JS, Python, Go, Java, Ruby, PHP, Rust, Swift, Kotlin, .NET, Elixir, Dart).</p>}
       </div>
     </div>
   )
@@ -142,15 +127,13 @@ const narratives = [
   { t: 'Pricing unclear at scale', tone: 'bad' as const, d: '+2' },
 ]
 function SentimentViz() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
   const [hl, setHl] = useState<string | null>(null)
   return (
-    <div ref={ref} className="rf-sent">
+    <div className="rf-sent">
       <div className="rf-sent__top"><span>Sentiment</span><b>{hl ? sentiment.find((s) => s.k === hl)!.v : 64}%<small> {hl ?? 'Positive'}</small></b></div>
       <div className="rf-sent__bar">
-        {sentiment.map((s, i) => (
-          <motion.button key={s.k} type="button" aria-label={`${s.k} ${s.v}%`} style={{ background: s.c, opacity: hl && hl !== s.k ? 0.35 : 1 }} initial={{ width: 0 }} animate={inView ? { width: `${s.v}%` } : {}} transition={{ duration: 0.8, delay: i * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+        {sentiment.map((s) => (
+          <button key={s.k} type="button" aria-label={`${s.k} ${s.v}%`} style={{ width: `${s.v}%`, background: s.c, opacity: hl && hl !== s.k ? 0.35 : 1 }}
             onMouseEnter={() => setHl(s.k)} onMouseLeave={() => setHl(null)} onFocus={() => setHl(s.k)} onBlur={() => setHl(null)} />
         ))}
       </div>
@@ -174,12 +157,12 @@ const threads = [
 function RedditViz() {
   return (
     <ul className="rf-threads">
-      {threads.map((t, i) => (
-        <motion.li key={t.t} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
+      {threads.map((t) => (
+        <li key={t.t}>
           <MessageSquare size={14} />
           <div><b>{t.t}</b><span>{t.sub} · Sample thread</span></div>
           <span className="tag">{t.n} cites</span>
-        </motion.li>
+        </li>
       ))}
     </ul>
   )
@@ -197,27 +180,25 @@ export function Reinforced() {
   return (
     <section className="sec sec--top rf" id="reinforced">
       <div className="shell">
-        <CarouselProvider>
-          <div className="sec-head">
-            <Reveal className="sec-head__text">
-              <h2 className="h2">Reinforced by every new data point</h2>
-              <p className="lead">Upstream learns what worked and closes the loop between action and result.</p>
-            </Reveal>
-            <CarouselControls />
+        <div className="sec-head">
+          <div className="sec-head__text">
+            <div className="eyebrow">Feedback loop</div>
+            <h2 className="h2">Reinforced by every new data point</h2>
+            <p className="lead">Upstream learns what worked and closes the loop between action and result.</p>
           </div>
-          <CarouselTrack label="Data points" className="rf-track">
-            {items.map((it) => (
-              <CarouselItem key={it.title} className="rf-cell">
-                <div className="rf-cell__viz">{it.viz}</div>
-                <div className="rf-cell__text">
-                  <h3 className="h3">{it.title}</h3>
-                  <p className="body">{it.body}</p>
-                  <button type="button" className="btn btn--secondary">{it.cta}</button>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselTrack>
-        </CarouselProvider>
+        </div>
+        <div className="rf-grid">
+          {items.map((it) => (
+            <article key={it.title} className="rf-cell">
+              <div className="rf-cell__viz">{it.viz}</div>
+              <div className="rf-cell__text">
+                <h3 className="h3">{it.title}</h3>
+                <p className="body">{it.body}</p>
+                <button type="button" className="btn btn--secondary">{it.cta}</button>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )

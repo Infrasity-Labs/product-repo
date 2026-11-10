@@ -3,7 +3,7 @@
 .ad { width: min(1320px, 100% - 48px); margin: 0 auto; }
 .ad__frame {
   display: grid; grid-template-columns: 232px minmax(0, 1fr); height: 696px; overflow: hidden; text-align: left;
-  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-pop);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--r-lg); box-shadow: 0 1px 2px rgba(15, 15, 18, 0.04);
   font-size: 13px; line-height: 20px; letter-spacing: -0.01em; color: var(--fg);
 }
 .ad button { color: inherit; }
@@ -49,9 +49,7 @@
 .ad__bubble { align-self: flex-end; max-width: 88%; padding: 10px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
 .ad__worked { display: inline-flex; align-items: center; gap: 6px; color: var(--fg-3); font-size: 12px; margin-top: 12px; }
 .ad__worked b { font-weight: 500; }
-.ad__spin { animation: ad-spin 0.9s linear infinite; }
 .ad-bot { color: var(--fg-2); }
-.ad-caret { display: inline-block; width: 2px; height: 13px; margin-left: 2px; vertical-align: -2px; background: var(--fg); animation: ad-blink 0.8s steps(1) infinite; }
 .ad__exec {
   display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-subtle);
   font-size: 12px; text-align: left; transition: border-color 0.15s, background 0.15s;
@@ -60,7 +58,6 @@
 .ad__exec span { color: var(--fg-3); }
 .ad__exec b { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; color: var(--brand); }
 .ad__exec em { margin-left: auto; font-style: normal; color: var(--fg-2); }
-.ad__in { animation: ad-in 0.35s var(--ease) both; }
 
 .ad__input { margin: 0 16px 16px; padding: 12px; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; flex-shrink: 0; }
 .ad__input:focus-within { border-color: var(--fg-3); box-shadow: 0 0 0 3px rgba(15, 15, 18, 0.05); }
@@ -68,9 +65,8 @@
 .ad__input input::placeholder { color: var(--fg-4); }
 .ad__input-row { display: flex; align-items: center; gap: 4px; }
 .ad__spacer { flex: 1; }
-.ad__send { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--fg); color: #fff !important; transition: opacity 0.15s, transform 0.15s; }
+.ad__send { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--fg); color: #fff !important; transition: opacity 0.15s; }
 .ad__send:disabled { opacity: 0.18; cursor: default; }
-.ad__send:not(:disabled):hover { transform: scale(1.06); }
 
 /* preview */
 .ad__preview { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--bg-subtle); }
@@ -82,11 +78,8 @@
 .ad__phead { display: flex; align-items: center; justify-content: space-between; height: 46px; padding: 0 12px 0 16px; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 12px; font-weight: 500; flex-shrink: 0; }
 .ad__export { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; background: var(--fg); color: #fff !important; font-size: 12px; font-weight: 500; transition: background 0.15s; }
 .ad__export:hover { background: #2a2a31; }
-.ad__doc { flex: 1; min-height: 0; overflow: hidden; animation: ad-in 0.45s var(--ease) both; }
+.ad__doc { flex: 1; min-height: 0; overflow: hidden; }
 
-@keyframes ad-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes ad-spin { to { transform: rotate(360deg); } }
-@keyframes ad-blink { 50% { opacity: 0; } }
 
 /* ---------- preview documents ---------- */
 .dd-paper { height: 100%; background: #f7f6f1; color: #1b1b1b; display: flex; flex-direction: column; }
@@ -99,7 +92,7 @@
 .dd-paper__h { margin-top: 14px; font-size: 44px; line-height: 44px; font-weight: 500; letter-spacing: -0.045em; }
 .dd-paper__p { margin-top: 16px; max-width: 420px; font-size: 13px; line-height: 20px; color: #555; }
 
-.dd-grid { margin-top: 22px; border: 1px solid rgba(20, 18, 10, 0.16); border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(20, 18, 10, 0.05), 0 16px 32px -20px rgba(20, 18, 10, 0.3); }
+.dd-grid { margin-top: 22px; border: 1px solid rgba(20, 18, 10, 0.16); border-radius: 12px; overflow: hidden; background: #fff; }
 .dd-grid__head, .dd-grid__row { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 32px) 116px; align-items: center; column-gap: 8px; padding: 10px 14px; font-size: 12px; color: #141414; }
 .dd-grid__head { font-size: 11px; font-weight: 500; color: #6b6a63; background: #faf9f5; border-bottom: 1px solid rgba(20, 18, 10, 0.12); }
 .dd-grid__head > span, .dd-grid__row > span { display: flex; align-items: center; min-height: 20px; }
@@ -117,7 +110,6 @@
 .dd-dot { flex: none; width: 18px; height: 18px; display: block; position: relative; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 1.5px #aaa593; }
 .dd-dot svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .dd-dot--on { background: var(--good); box-shadow: none; }
-.dd-paper { background: linear-gradient(180deg, #f8f6ee 0%, #f3f0e5 100%); }
 
 .dd-list { margin-top: 20px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 10px; background: rgba(255, 255, 255, 0.6); }
 .dd-list__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; }
@@ -133,28 +125,27 @@
 .dd-data__head h4 { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: -0.03em; }
 .dd-data__head p { color: var(--fg-3); font-size: 12px; margin-top: 2px; }
 .dd-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
-.dd-stat { padding: 14px 14px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); display: flex; flex-direction: column; gap: 2px; animation: ad-in 0.4s var(--ease) both; }
+.dd-stat { padding: 14px 14px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); display: flex; flex-direction: column; gap: 2px; }
 .dd-stat__label { font-size: 12px; color: var(--fg-3); }
 .dd-stat__value { font-size: 26px; line-height: 32px; font-weight: 500; letter-spacing: -0.04em; }
 .dd-stat__delta { font-size: 12px; color: var(--fg-3); }
 .dd-stat__delta--good { color: var(--good); }
 .dd-stat__delta--bad { color: var(--bad); }
 .dd-table { margin-top: 20px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
-.dd-table__row { display: grid; grid-template-columns: minmax(0, 1.8fr); grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; align-items: center; gap: 12px; padding: 11px 16px; animation: ad-in 0.35s var(--ease) both; }
+.dd-table__row { display: grid; grid-template-columns: minmax(0, 1.8fr); grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; align-items: center; gap: 12px; padding: 11px 16px; }
 .dd-table__row + .dd-table__row { border-top: 1px solid var(--border); }
 .dd-table__row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.dd-table__row--head { background: var(--bg-subtle); color: var(--fg-3); font-size: 12px; animation: none; padding-block: 9px; }
+.dd-table__row--head { background: var(--bg-subtle); color: var(--fg-3); font-size: 12px; padding-block: 9px; }
 .dd-table__row:not(.dd-table__row--head):hover { background: var(--bg-subtle); }
 .dd-bar { display: flex; align-items: center; gap: 8px; }
 .dd-bar__track { flex: 1; height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; }
-.dd-bar__fill { display: block; height: 100%; border-radius: 3px; background: var(--brand); transform-origin: left; animation: dd-grow 0.8s var(--ease) both; }
+.dd-bar__fill { display: block; height: 100%; border-radius: 3px; background: var(--brand); }
 .dd-bar__fill--good { background: var(--good); }
 .dd-bar__fill--bad { background: var(--bad); }
 .dd-bar__fill--warn { background: var(--warn); }
 .dd-bar__fill--info { background: var(--info); }
 .dd-bar__label { font-size: 12px; color: var(--fg-2); min-width: 36px; text-align: right; }
 .dd-engine { display: inline-flex; align-items: center; gap: 8px; }
-@keyframes dd-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (max-width: 1100px) {
   .ad__frame { grid-template-columns: minmax(0, 1fr); }

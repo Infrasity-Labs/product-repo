@@ -1,29 +1,37 @@
-import { memo, useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
-import { ArrowRight } from 'lucide-react'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { ArrowRight, Check, MessageSquare } from 'lucide-react'
 import { engines } from '../content'
 import { EngineLogo } from './EngineLogo'
 import { AppDemo } from './AppDemo'
 import '../styles/hero.css'
 
-// Engines floating in the hero margins: [engine id, left|right, horizontal %, top px, tile size, float delay s]
-const floaters: [string, 'l' | 'r', number, number, number, number][] = [
-  ['chatgpt', 'l', 7, 190, 60, 0],
-  ['claude', 'l', 14, 340, 48, 1.2],
-  ['gemini', 'l', 4, 410, 44, 2.1],
-  ['perplexity', 'r', 8, 210, 54, 0.6],
-  ['copilot', 'r', 15, 350, 48, 1.8],
-  ['grok', 'r', 4, 420, 44, 2.6],
+// Decorative drifting dots: [left %, top px, size px, drift x px, drift y px, duration s, delay s]
+const dots: [number, number, number, number, number, number, number][] = [
+  [5, 150, 3, 10, -20, 9, 0],
+  [11, 300, 2, -8, 16, 7, -2],
+  [17, 90, 3, 10, 14, 10, -4],
+  [8, 440, 4, 12, -12, 11, -1],
+  [23, 520, 2, -10, -16, 8, -5],
+  [28, 200, 2, 6, 18, 6, -3],
+  [33, 120, 3, -8, 14, 9, -7],
+  [14, 220, 2, 8, -10, 7, -1],
+  [20, 400, 3, -10, 12, 10, -6],
+  [95, 130, 3, -12, 18, 10, -2],
+  [89, 280, 2, 10, -14, 8, -6],
+  [83, 80, 2, -8, 12, 7, -1],
+  [92, 430, 4, -14, -18, 12, -3],
+  [77, 520, 2, 8, -12, 9, -4],
+  [72, 210, 2, -6, 16, 6, -5],
+  [67, 110, 3, 8, 14, 9, -2],
+  [86, 360, 3, -10, -12, 11, -8],
+  [4, 560, 3, 10, -10, 10, -2],
+  [97, 560, 3, -10, -10, 9, -6],
+  [60, 560, 2, 8, -12, 8, -3],
+  [40, 570, 2, -8, -10, 9, -5],
+  [78, 330, 2, 6, 12, 7, -9],
 ]
 
-const ease = [0.2, 0.8, 0.2, 1] as const
-const rise = (delay: number) => ({
-  initial: { opacity: 0, y: 22 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease },
-})
-
-/** Owns the rotation timer so the rest of the hero (including the demo) does not re-render every 2.4s. */
+/** Cycles through the engines under the headline. Its own state, so the rest of the hero never re-renders. */
 function RotatingEngine() {
   const [i, setI] = useState(0)
 
@@ -31,83 +39,114 @@ function RotatingEngine() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const t = window.setInterval(() => {
       if (!document.hidden) setI((n) => (n + 1) % engines.length)
-    }, 2400)
+    }, 2200)
     return () => window.clearInterval(t)
   }, [])
 
   const e = engines[i]
   return (
-    <span className="hero__rot" aria-live="polite">
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={e.id}
-          className="hero__rot-in"
-          initial={{ opacity: 0, y: 28, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, y: -28, filter: 'blur(8px)' }}
-          transition={{ duration: 0.34, ease }}
-        >
-          <span className="hero__rot-logo">
-            <EngineLogo engine={e.id} size={38} />
-          </span>
-          <span className="hero__rot-name">{e.name}</span>
-        </motion.span>
-      </AnimatePresence>
-    </span>
+    <>
+      <span className="sr-only">{engines.map((x) => x.name).join(', ')}</span>
+      <span className="hero__rot" aria-hidden>
+        <span key={e.id} className="hero__rot-in">
+          <EngineLogo engine={e.id} size={44} />
+          <span className="glass">{e.name}</span>
+        </span>
+      </span>
+    </>
   )
 }
 
-const Floaters = memo(function Floaters() {
+const SOV = [18, 20, 19, 23, 26, 25, 30, 33, 36, 39, 43, 45.9]
+const sovPath = (() => {
+  const w = 120, h = 36, min = Math.min(...SOV), max = Math.max(...SOV)
+  return SOV.map((v, i) => `${i ? 'L' : 'M'}${((i / (SOV.length - 1)) * w).toFixed(1)} ${(h - 3 - ((v - min) / (max - min)) * (h - 6)).toFixed(1)}`).join(' ')
+})()
+
+const cited: [string, string][] = [['chatgpt', '#1'], ['perplexity', '#1'], ['claude', '#2']]
+
+/** Product cards that overlap the demo window's edges. Sample data, same figures as the Results section. */
+function FloatingCards() {
   return (
-    <div className="hero__floaters" aria-hidden>
-      {floaters.map(([id, side, x, y, size, delay]) => (
-        <span
-          key={id}
-          className="hero__tile"
-          style={{ [side === 'l' ? 'left' : 'right']: `${x}%`, top: y, width: size, height: size, animationDelay: `${delay}s` }}
-        >
-          <EngineLogo engine={id} size={Math.round(size * 0.52)} />
-        </span>
-      ))}
+    <div className="hero__cards" aria-hidden>
+      <div className="hc hc--sov">
+        <span className="hc__label">Share of voice</span>
+        <div className="hc__row"><b className="hc__big">45.9%</b><span className="tag tag--good">+7.9 pts</span></div>
+        <svg viewBox="0 0 120 36" width="120" height="36" fill="none"><path d={sovPath} stroke="var(--brand)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </div>
+
+      <div className="hc hc--cited">
+        <span className="hc__label">Now cited by</span>
+        <ul>
+          {cited.map(([id, rank]) => (
+            <li key={id}>
+              <EngineLogo engine={id} size={16} />
+              <span>{engines.find((e) => e.id === id)?.name}</span>
+              <em>{rank}</em>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="hc hc--reddit">
+        <MessageSquare size={14} />
+        <div>
+          <b>What are you using for LLM observability?</b>
+          <span>r/webdev · quoted in 14 answers</span>
+        </div>
+      </div>
+
+      <div className="hc hc--fix">
+        <span className="hc__check"><Check size={12} /></span>
+        <div>
+          <b>3 fixes staged</b>
+          <span>Waiting for your approval</span>
+        </div>
+      </div>
     </div>
   )
-})
+}
 
 export function Hero() {
   return (
     <section className="hero" id="top">
-      <div className="hero__glow" aria-hidden />
-      <div className="hero__dots" aria-hidden />
-      <Floaters />
+      <div className="hero__grid" aria-hidden />
+      <div className="hero__dots" aria-hidden>
+        {dots.map(([x, y, s, dx, dy, dur, delay], i) => (
+          <span
+            key={i}
+            className="hero__dot"
+            style={{ left: `${x}%`, top: y, width: s, height: s, '--dx': `${dx}px`, '--dy': `${dy}px`, '--dur': `${dur}s`, '--delay': `${delay}s` } as CSSProperties}
+          />
+        ))}
+      </div>
 
       <div className="hero__copy">
-        <motion.h1 className="h1 hero__title" {...rise(0.08)}>
-          <span>The AI visibility platform to win in</span>
-          <RotatingEngine />
-        </motion.h1>
+        <span className="hero__badge"><i /> AEO for developer tools</span>
 
-        <motion.p className="lead hero__lead" {...rise(0.18)}>
+        <h1 className="h1 hero__title">
+          <span className="glass">The AI visibility platform to win in</span>
+          <RotatingEngine />
+        </h1>
+
+        <p className="lead hero__lead">
           Upstream tracks the questions your buyers ask across 8 AI engines, shows which GitHub repos, Reddit threads and
           listicles they trust, and tells you what to ship next to get cited.
-        </motion.p>
+        </p>
 
-        <motion.div className="btn-row hero__cta" {...rise(0.26)}>
+        <div className="btn-row hero__cta">
           <a className="btn btn--primary btn--lg" href="#start">
             Get a free audit <ArrowRight size={15} />
           </a>
           <a className="btn btn--outline btn--lg" href="#product">Take the tour</a>
-        </motion.div>
-        <motion.p className="hero__note" {...rise(0.32)}>No install. First report in 48 hours.</motion.p>
+        </div>
+        <p className="hero__note">No install. First report in 48 hours.</p>
       </div>
 
-      <motion.div
-        className="hero__demo"
-        initial={{ opacity: 0, y: 70, scale: 0.965 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1, delay: 0.4, ease }}
-      >
+      <div className="hero__stage" id="engines">
+        <FloatingCards />
         <AppDemo />
-      </motion.div>
+      </div>
     </section>
   )
 }

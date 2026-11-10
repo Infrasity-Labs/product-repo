@@ -1,9 +1,8 @@
-.prc-grid { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.prc-cell { position: relative; padding: 0 var(--gutter) var(--gutter); display: flex; flex-direction: column; transition: background .3s var(--ease), transform .3s var(--ease); background: var(--surface); }
-.prc-cell:hover { background: var(--bg-subtle); }
-.prc-band { height: 36px; margin: 0 calc(var(--gutter) * -1) 24px; display: flex; align-items: center; justify-content: flex-end; padding: 0 var(--gutter); border-bottom: 1px solid var(--border); }
-.prc-cell--feat .prc-band { background: var(--brand-soft); border-bottom-color: color-mix(in srgb, var(--brand) 18%, var(--border)); justify-content: space-between; }
-.prc-cell--feat .prc-band::before { content: ''; }
+.prc-wrap { padding: 0 var(--gutter); }
+.prc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.prc-cell { display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: 0 1px 2px rgba(15, 15, 18, 0.04); }
+.prc-cell--feat { border-color: var(--brand); }
+.prc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 24px; }
 .prc-name { font-size: 16px; font-weight: 500; line-height: 24px; color: var(--fg); }
 .prc-price { margin-top: 20px; font-size: 40px; line-height: 44px; letter-spacing: -0.03em; font-weight: 500; color: var(--fg); }
 .prc-price small { font-size: 14px; color: var(--fg-3); letter-spacing: 0; margin-left: 6px; font-weight: 400; }
@@ -13,10 +12,9 @@
 .prc-list li { display: flex; gap: 10px; font-size: 14px; line-height: 20px; color: var(--fg-2); letter-spacing: -0.0125em; }
 .prc-list svg { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--fg); }
 .prc-cell--feat .prc-list svg { color: var(--brand); }
-.prc-note { padding: 14px var(--gutter) 0; font-size: 12px; color: var(--fg-3); }
 @media (max-width: 800px) {
-  .prc-grid.cg--3 { grid-template-columns: 1fr; }
-  .prc-grid > * { border-right: 0; }
-  .prc-cell { padding: 0 16px 24px; }
-  .prc-band { margin: 0 -16px 20px; padding: 0 16px; }
+  .prc-wrap { padding: 0 16px; }
+  .prc-grid { grid-template-columns: 1fr; }
+  .prc-cell { padding: 20px; }
+  .prc-blurb { min-height: 0; }
 }
