@@ -1,6 +1,0 @@
-.fcta { margin-top: 96px; background: var(--brand-soft); }
-.fcta__inner { text-align: center; padding: 88px var(--gutter); }
-.fcta .h2 { max-width: 760px; margin-inline: auto; }
-.fcta .lead { max-width: 520px; margin-inline: auto; }
-.fcta .btn-row { justify-content: center; margin-top: 28px; }
-@media (max-width: 800px) { .fcta { margin-top: 64px; } .fcta__inner { padding: 56px 16px; } .fcta .h2 { font-size: 34px; line-height: 40px; } }
