@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upstream by Infrasity — AI visibility for developer tools</title>
+    <meta name="description" content="Upstream tracks what 8 AI engines say about your developer tool, and tells you what to ship to get cited." />
+    <meta name="theme-color" content="#f6f5f1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>document.documentElement.classList.add('js')</script>
+  </head>
+  <body>
+    <div class="cursor" aria-hidden="true"></div>
+
+    <header class="nav" id="nav">
+      <a class="nav__logo" href="#top" aria-label="Upstream">
+        <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M16 7v13M10 13l6-6 6 6M10 24c0-3 2.5-4 6-4s6 1 6 4" fill="none" stroke="var(--paper)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Upstream
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#results">Results</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="pill pill--ink pill--sm" href="#start">Get a free audit</a>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="top">
+        <canvas class="hero__gl" id="gl" aria-hidden="true"></canvas>
+        <div class="hero__inner">
+          <p class="label" data-r>AEO for developer tools</p>
+          <h1 class="hero__title" data-r>
+            <span class="ink">The AI visibility platform to win in</span>
+            <span class="sr-only">ChatGPT, Claude, Gemini, Perplexity, Google AI Overviews, Google AI Mode, Microsoft Copilot, Grok</span>
+            <span class="hero__rot" id="rot" aria-hidden="true"><span class="hero__rot-in"><img src="/logos/chatgpt.svg" alt="" width="48" height="48" /><span class="ink">ChatGPT</span></span></span>
+          </h1>
+          <p class="hero__sub" data-r>Upstream tracks what 8 AI engines say about your developer tool, and tells you what to ship to get cited.</p>
+          <div class="hero__cta" data-r>
+            <a class="pill pill--ink" href="#start">Get a free audit <span aria-hidden="true">→</span></a>
+            <a class="link" href="#how">See how it works</a>
+          </div>
+          <p class="label label--dim" data-r>No install · First report in 48 hours</p>
+        </div>
+      </section>
+
+      <!-- DASHBOARD: the old product demo, rendered by src/sections/appdemo.ts; peeks into the first fold -->
+      <section class="dash" id="product" aria-label="Product preview"></section>
+
+      <!-- TRUSTED BY (real client marks from the Infrasity repo's trustedby-bw set) -->
+      <section class="trusted" aria-label="Trusted by">
+        <div class="wrap">
+          <p class="label label--dim" data-r>Trusted by developer-tool teams</p>
+          <ul class="trusted__row" data-r>
+            <li><img src="/trusted/cerbos.png" alt="Cerbos" /></li>
+            <li><img src="/trusted/daytona.png" alt="Daytona" /></li>
+            <li><img src="/trusted/scalr.png" alt="Scalr" /></li>
+            <li><img src="/trusted/lovable-logo.png" alt="Lovable" /></li>
+            <li><img src="/trusted/qodo-logo.png" alt="Qodo" /></li>
+            <li><img src="/trusted/Kubiya.png" alt="Kubiya" /></li>
+            <li><img src="/trusted/vapi-logo.png" alt="Vapi" /></li>
+            <li><img src="/trusted/Zenml.png" alt="ZenML" /></li>
+            <li><img src="/trusted/brave.svg" alt="Brave" /></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 01 STATEMENT -->
+      <section class="sec statement" id="problem">
+        <div class="wrap">
+          <p class="label" data-r>01 — The shift</p>
+          <p class="statement__text" id="statement">Developers don’t search anymore. They ask. The answer names a few tools and cites the sources it trusts. Upstream shows you whether one of them is yours.</p>
+          <div id="sources-host"></div>
+        </div>
+      </section>
+
+      <!-- 02 HOW -->
+      <section class="sec" id="how">
+        <div class="wrap">
+          <p class="label" data-r>02 — How it works</p>
+          <h2 class="h2" data-r><span class="ink">Four steps from prompt to cited.</span></h2>
+          <ol class="rows">
+            <li class="row" data-r>
+              <span class="row__n mono">01</span>
+              <h3 class="row__t">Track</h3>
+              <p class="row__d">Every question your buyers ask, across 8 AI engines, on every scan.</p>
+            </li>
+            <li class="row" data-r>
+              <span class="row__n mono">02</span>
+              <h3 class="row__t">Understand</h3>
+              <p class="row__d">Who gets named instead of you, in what order, and which GitHub repos, Reddit threads and listicles the engine trusted.</p>
+            </li>
+            <li class="row" data-r>
+              <span class="row__n mono">03</span>
+              <h3 class="row__t">Act</h3>
+              <p class="row__d">Answers, posts and pitches drafted for you and staged for approval. Nothing goes live until you say so.</p>
+            </li>
+            <li class="row" data-r>
+              <span class="row__n mono">04</span>
+              <h3 class="row__t">Measure</h3>
+              <p class="row__d">Share of voice, citations and AI referral visits, week over week.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 03 MAKES IT POSSIBLE -->
+      <section class="sec" id="makes"></section>
+
+      <!-- 04 CONTEXT -->
+      <section class="sec" id="context"></section>
+
+      <!-- 05 RESULTS -->
+      <section class="sec" id="results"></section>
+
+      <!-- 06 REINFORCED -->
+      <section class="sec" id="reinforced"></section>
+
+      <!-- 07 COMMAND CENTER -->
+      <section class="sec" id="command"></section>
+
+      <!-- 04 ENGINES -->
+      <section class="sec" id="engines">
+        <div class="wrap">
+          <p class="label" data-r>08 — Coverage</p>
+          <h2 class="h2" data-r><span class="ink">One prompt. Eight answers.</span></h2>
+          <ul class="engines">
+            <li data-r><img src="/logos/chatgpt.svg" alt="" width="28" height="28" /><span class="mono">ChatGPT</span></li>
+            <li data-r><img src="/logos/claude.svg" alt="" width="28" height="28" /><span class="mono">Claude</span></li>
+            <li data-r><img src="/logos/gemini.svg" alt="" width="28" height="28" /><span class="mono">Gemini</span></li>
+            <li data-r><img src="/logos/perplexity.svg" alt="" width="28" height="28" /><span class="mono">Perplexity</span></li>
+            <li data-r><img src="/logos/google.svg" alt="" width="28" height="28" /><span class="mono">AI Overviews</span></li>
+            <li data-r><img src="/logos/google.svg" alt="" width="28" height="28" /><span class="mono">AI Mode</span></li>
+            <li data-r><img src="/logos/copilot.svg" alt="" width="28" height="28" /><span class="mono">Copilot</span></li>
+            <li data-r><img src="/logos/grok.svg" alt="" width="28" height="28" /><span class="mono">Grok</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 09 RESEARCH -->
+      <section class="sec" id="research"></section>
+
+      <!-- 10 COMPARE -->
+      <section class="sec" id="why"></section>
+
+      <!-- 05 PRICING -->
+      <section class="sec" id="pricing">
+        <div class="wrap">
+          <p class="label" data-r>11 — Pricing</p>
+          <h2 class="h2" data-r><span class="ink">Hand off as much as you want.</span></h2>
+          <div class="plans">
+            <article class="plan" data-r>
+              <h3 class="plan__name">Starter</h3>
+              <p class="plan__price"><span class="ink">[PRICE]</span><small class="mono">/ month</small></p>
+              <p class="plan__blurb">For seed-stage teams finding their first AI citations.</p>
+              <ul class="plan__list"><li>[N] prompts</li><li>[Engines included]</li><li>Model results and Sources</li><li>Weekly email report</li></ul>
+              <a class="pill pill--line" href="#start">Start free audit</a>
+            </article>
+            <article class="plan plan--hot" data-r>
+              <h3 class="plan__name">Growth <span class="tag mono">Most teams</span></h3>
+              <p class="plan__price"><span class="ink">[PRICE]</span><small class="mono">/ month</small></p>
+              <p class="plan__blurb">For Series A+ teams acting on the data every week.</p>
+              <ul class="plan__list"><li>[N] prompts, unlimited clusters</li><li>All 8 engines, incl. Copilot and Grok</li><li>Listicles, Reddit, Distribution, Actions</li><li>Slack alerts and CSV export</li></ul>
+              <a class="pill pill--ink" href="#start">Start free audit</a>
+            </article>
+            <article class="plan" data-r>
+              <h3 class="plan__name">Done for you</h3>
+              <p class="plan__price"><span class="ink">Custom</span></p>
+              <p class="plan__blurb">Upstream plus Infrasity’s team doing the work.</p>
+              <ul class="plan__list"><li>Everything in Growth</li><li>Content written by engineers</li><li>Listicle outreach and placements</li><li>Monthly report and strategy call</li></ul>
+              <a class="pill pill--line" href="#start">Talk to us</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 FAQ -->
+      <section class="sec" id="faq">
+        <div class="wrap faq">
+          <div>
+            <p class="label" data-r>12 — Questions</p>
+            <h2 class="h2" data-r><span class="ink">Frequently asked.</span></h2>
+          </div>
+          <div class="faq__list" data-r>
+            <details open>
+              <summary>Who is Upstream built for?</summary>
+              <p>DevTool, AI agent and B2B SaaS startups whose buyers are engineers. Prompt sets, source tracking and listicle outreach are tuned for how developers search: SDKs, alternatives and how-tos.</p>
+            </details>
+            <details>
+              <summary>Which AI engines do you track?</summary>
+              <p>Eight: ChatGPT, Claude, Gemini, Perplexity, Google AI Overviews, Google AI Mode, Microsoft Copilot and Grok. Every tracked prompt runs on all of them.</p>
+            </details>
+            <details>
+              <summary>Why track Copilot and Grok?</summary>
+              <p>Copilot sits inside VS Code, GitHub, Edge and Microsoft 365, right where engineers work. Grok pulls from a different set of sites than ChatGPT does. Being cited in one does not mean being cited in the other.</p>
+            </details>
+            <details>
+              <summary>How often do you check the answers?</summary>
+              <p>Each scan runs your prompts across every engine and stores the full answer. Scan health shows which engines ran, when they last ran, and how complete each scan was, before you read any numbers.</p>
+            </details>
+            <details>
+              <summary>How is this different from an SEO rank tracker?</summary>
+              <p>AI engines do not return ten blue links. They write one answer and cite a few sources. Upstream tracks whether you are named, in what order, and which GitHub repos, Reddit threads and listicles the engine trusted to get there.</p>
+            </details>
+            <details>
+              <summary>Can your team do the work for us?</summary>
+              <p>Yes, optionally. The Done for you plan adds Infrasity’s engineers: content written by engineers, listicle outreach and placements, and a monthly report with a strategy call.</p>
+            </details>
+            <details>
+              <summary>What’s in the free audit?</summary>
+              <p>A first report in 48 hours with no install: where you are cited today across the 8 engines, who gets recommended instead, which sources engines trust in your category, and what to ship next.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="sec cta" id="start">
+        <div class="wrap">
+          <h2 class="cta__title" data-r><span class="ink">Get cited.</span></h2>
+          <p class="cta__sub" data-r>Reach the developers who ask AI which tool to use.</p>
+          <div class="hero__cta" data-r>
+            <a class="pill pill--ink" href="https://infrasity.com">Get a free audit <span aria-hidden="true">→</span></a>
+            <a class="link" href="https://infrasity.com">Book a demo</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot__in">
+        <span class="foot__by"><img src="/infrasity.png" alt="Infrasity" height="16" /><span class="mono">© 2026 Infrasity</span></span>
+        <span class="mono"><i class="dot"></i> All services are online</span>
+      </div>
+      <div class="foot__word ink" aria-hidden="true">Upstream</div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

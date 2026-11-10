@@ -1,0 +1,36 @@
+/* ---------- command ---------- */
+.op-stack { margin-top: 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; }
+.op-big, .op-big .op-frame { min-width: 0; }
+.op-title { font-size: 22px; line-height: 1.2; font-weight: 400; letter-spacing: -0.025em; }
+.op-sub { margin-top: 8px; font-size: 15px; color: var(--soft); max-width: 52ch; }
+.op-big .op-frame { margin-top: 32px; }
+.op-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.op-pair > article { min-width: 0; }
+.op-pair .op-frame { margin-top: 24px; }
+.op-stack .app { min-width: 0; }
+.op-stack .op-frame > .app + .app { margin-top: 12px; }
+
+.lead { font-size: 18px; color: var(--soft); max-width: 52ch; margin-top: 20px; }
+
+/* ---------- research ---------- */
+.op-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.op-tabs { margin-top: 56px; display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: #fff; max-width: 100%; overflow-x: auto; }
+.op-tab { height: 36px; padding: 0 18px; border-radius: 999px; font-size: 14px; color: var(--soft); white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
+.op-tab:hover { color: var(--ink); }
+.op-tab[aria-selected='true'] { background: var(--ink); color: var(--paper); }
+.op-rgrid { margin-top: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.op-rcard { position: relative; display: flex; flex-direction: column; gap: 56px; min-height: 200px; padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 14px; transition: border-color 0.2s, transform 0.3s var(--ease); }
+.op-rcard:hover { border-color: var(--ink); transform: translateY(-2px); }
+.op-rcard__t { font-size: 22px; line-height: 1.2; letter-spacing: -0.025em; font-weight: 400; max-width: 20ch; }
+.op-card__arrow { position: absolute; right: 22px; bottom: 22px; color: var(--dim); transition: color 0.2s, transform 0.3s var(--ease); }
+.op-rcard:hover .op-card__arrow { color: var(--accent); transform: translate(2px, -2px); }
+
+@media (max-width: 900px) {
+  .op-pair { grid-template-columns: 1fr; }
+  .op-rgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .op-pair, .op-rgrid { grid-template-columns: 1fr; }
+  .op-rcard { min-height: 160px; gap: 36px; }
+}
+@media (prefers-reduced-motion: reduce) { .op-rcard:hover, .op-rcard:hover .op-card__arrow { transform: none; } }

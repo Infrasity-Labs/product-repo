@@ -1,0 +1,5 @@
+/* Defaults the real app's globals.css sets on body/p that the `.app` reset does not: borders use --border, <p> is muted. */
+@layer base {
+  [data-app-window] *, [data-app-window] ::before, [data-app-window] ::after { border-color: #e5e5e5; }
+  [data-app-window] p { color: #6b7280; }
+}
